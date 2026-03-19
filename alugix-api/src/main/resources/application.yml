@@ -27,6 +27,14 @@ server:
   servlet:
     context-path: /
 
+jwt:
+  secret: alugix-secret-key-2026-spring-boot-jwt-seguro-256bits-minimo
+  expiration: 86400000
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
 management:
   endpoints:
     web:
