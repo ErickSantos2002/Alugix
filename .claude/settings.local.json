@@ -4,7 +4,17 @@
       "mcp__claude_ai_ClickUp__clickup_get_workspace_hierarchy",
       "mcp__claude_ai_ClickUp__clickup_update_task",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm install:*)",
+      "Bash(node -e \"const p = require\\(''./node_modules/@angular/material/package.json''\\); console.log\\(p.version\\)\")",
+      "Bash(npx ng:*)",
+      "Bash(find /c/Users/HS/Documents/GitHub/Alugix/alugix-api/src -name *.properties -o -name *.yml -o -name *.yaml)",
+      "Bash(xargs grep:*)",
+      "Read(//c/Program Files/**)",
+      "Bash(where java:*)",
+      "Bash(ls \"/c/Program Files \\(x86\\)/Java/\")",
+      "mcp__claude_ai_ClickUp__clickup_get_list",
+      "mcp__claude_ai_ClickUp__clickup_search"
     ]
   }
 }
