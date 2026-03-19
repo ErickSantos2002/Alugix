@@ -554,27 +554,77 @@ Obrigatório: Erick revisa código do Welton. Welton revisa código do Erick.
 
 Esta seção define o padrão visual que Welton deve seguir em todas as telas do Alugix.
 
+## 10.0 Suporte a Tema Claro / Escuro
+
+O Alugix suporta **dois temas**: claro (padrão) e escuro (dark mode).
+
+- O tema padrão ao abrir o sistema é o **claro**
+- O usuário pode alternar via **botão na toolbar** (ícone `light_mode` / `dark_mode`)
+- A preferência é salva no `localStorage` com a chave `alugix-theme`
+- Implementado via CSS custom properties + classe `.dark-theme` no `<body>`
+- **Nunca usar cores hardcoded** — sempre via variável CSS ou token do Angular Material
+
 ## 10.1 Paleta de Cores
 
-|                |             |          |                                     |
-|----------------|-------------|----------|-------------------------------------|
-| **Uso**        | **Cor**     | **Hex**  | **Onde usar**                       |
-| Primária       | Azul escuro | \#1B4F72 | Sidebar, headers, botões principais |
-| Primária Light | Azul claro  | \#2E86C1 | Links, hovers, destaques            |
-| Secundária     | Verde       | \#27AE60 | Botões de sucesso, badges 'Ativo'   |
-| Alerta         | Amarelo     | \#F39C12 | Badges 'Pendente', avisos           |
-| Erro           | Vermelho    | \#E74C3C | Badges 'Atrasado', erros, exclusão  |
-| Neutro escuro  | Cinza       | \#2C3E50 | Texto principal                     |
-| Neutro claro   | Cinza claro | \#ECF0F1 | Backgrounds alternativos            |
-| Background     | Branco      | \#FFFFFF | Fundo principal dos cards           |
+### Tema Claro (padrão)
 
-**Configurar no Angular Material custom theme (styles.scss):**
+| **Uso**        | **Cor**     | **Hex**   | **Onde usar**                       |
+|----------------|-------------|-----------|-------------------------------------|
+| Primária       | Azul escuro | `#1B4F72` | Sidebar, headers, botões principais |
+| Primária Light | Azul claro  | `#2E86C1` | Links, hovers, destaques            |
+| Secundária     | Verde       | `#27AE60` | Botões de sucesso, badges 'Ativo'   |
+| Alerta         | Amarelo     | `#F39C12` | Badges 'Pendente', avisos           |
+| Erro           | Vermelho    | `#E74C3C` | Badges 'Atrasado', erros, exclusão  |
+| Texto          | Cinza escuro| `#2C3E50` | Texto principal                     |
+| Texto suave    | Cinza médio | `#7F8C8D` | Labels, subtítulos                  |
+| Surface        | Cinza claro | `#ECF0F1` | Backgrounds alternativos            |
+| Background     | Branco      | `#FFFFFF` | Fundo principal dos cards           |
 
-> \$alugix-primary: mat-palette(\$mat-blue, 900); // \#1B4F72
- \$alugix-accent: mat-palette(\$mat-green, 600); // \#27AE60
- \$alugix-warn: mat-palette(\$mat-red, 600); // \#E74C3C
+### Tema Escuro (dark mode)
 
-## 10.2 Layout Principal
+| **Uso**        | **Cor**          | **Hex**   | **Onde usar**                          |
+|----------------|------------------|-----------|----------------------------------------|
+| Primária       | Azul médio       | `#2E86C1` | Sidebar, headers, botões principais    |
+| Primária Light | Azul claro       | `#5DADE2` | Links, hovers, destaques              |
+| Secundária     | Verde            | `#27AE60` | Botões de sucesso, badges 'Ativo'      |
+| Alerta         | Amarelo          | `#F39C12` | Badges 'Pendente', avisos              |
+| Erro           | Vermelho         | `#E74C3C` | Badges 'Atrasado', erros, exclusão     |
+| Texto          | Branco suave     | `#E8EDF2` | Texto principal                        |
+| Texto suave    | Azul acinzentado | `#8FA3B3` | Labels, subtítulos                     |
+| Surface        | Azul escuro      | `#1E2D3E` | Cards, modais, formulários             |
+| Background     | Azul muito escuro| `#0F1923` | Fundo geral da aplicação               |
+| Sidebar        | Azul quase preto | `#0D1B2A` | Sidebar (mais escuro que o background) |
+| Borda          | Azul escuro suave| `#2A3F54` | Bordas de cards e inputs               |
+
+> **Racional das cores dark:** o azul escuro naval (`#0F1923`) foi escolhido por dar um aspecto premium e profissional, muito usado em SaaS financeiros modernos. Evita o preto puro (`#000`) que causa alto contraste agressivo, e mantém identidade com o azul da marca.
+
+**Configurar no styles.scss:**
+
+```scss
+// Tema Claro
+$alugix-light-primary: #1B4F72;
+$alugix-light-accent:  #27AE60;
+$alugix-light-warn:    #E74C3C;
+$alugix-light-bg:      #FFFFFF;
+$alugix-light-surface: #ECF0F1;
+
+// Tema Escuro
+$alugix-dark-primary: #2E86C1;
+$alugix-dark-accent:  #27AE60;
+$alugix-dark-warn:    #E74C3C;
+$alugix-dark-bg:      #0F1923;
+$alugix-dark-surface: #1E2D3E;
+```
+
+## 10.2 Botão de Alternância de Tema
+
+- **Local:** toolbar superior, lado direito (antes do avatar/logout)
+- **Ícone claro:** `dark_mode` (lua) — clicando ativa o dark
+- **Ícone escuro:** `light_mode` (sol) — clicando ativa o claro
+- **Implementação:** `ThemeService` em `core/services/theme.service.ts`
+- **Persistência:** `localStorage.setItem('alugix-theme', 'dark' | 'light')`
+
+## 10.4 Layout Principal
 
 O layout segue o padrão SPA com sidebar fixa:
 
@@ -596,7 +646,7 @@ O layout segue o padrão SPA com sidebar fixa:
 
 - Conteúdo: padding 24px, max-width 1200px centralizado
 
-## 10.3 Componentes de UI Padrão
+## 10.5 Componentes de UI Padrão
 
 |                    |                                            |                                         |
 |--------------------|--------------------------------------------|-----------------------------------------|
@@ -612,7 +662,7 @@ O layout segue o padrão SPA com sidebar fixa:
 | Loading spinner    | Enquanto carrega dados                     | mat-progress-spinner ou bar             |
 | Empty state        | Lista sem resultados                       | Ilustração + texto + botão de ação      |
 
-## 10.4 Padrão de Badges de Status
+## 10.6 Padrão de Badges de Status
 
 |            |                           |                  |                       |
 |------------|---------------------------|------------------|-----------------------|
@@ -628,7 +678,7 @@ O layout segue o padrão SPA com sidebar fixa:
 | PENDENTE   | \#FFF3E0 (amarelo claro)  | \#E65100         | Pagamentos            |
 | ATRASADO   | \#FFEBEE (vermelho claro) | \#C62828         | Pagamentos            |
 
-## 10.5 Responsividade
+## 10.7 Responsividade
 
 |                |                |                                                 |
 |----------------|----------------|-------------------------------------------------|
@@ -645,7 +695,7 @@ O layout segue o padrão SPA com sidebar fixa:
 
 - Botões de ação: FAB (floating action button) em mobile
 
-## 10.6 Tipografia
+## 10.8 Tipografia
 
 |                       |          |             |               |
 |-----------------------|----------|-------------|---------------|

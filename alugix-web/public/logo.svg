@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Fundo circular gradiente -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1B4F72"/>
+      <stop offset="100%" style="stop-color:#2E86C1"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5D76E"/>
+      <stop offset="100%" style="stop-color:#F39C12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Círculo de fundo -->
+  <circle cx="100" cy="100" r="100" fill="url(#bgGrad)"/>
+
+  <!-- Telhado da casa -->
+  <polygon points="100,32 158,82 42,82" fill="white" opacity="0.95"/>
+  <!-- Chaminé -->
+  <rect x="128" y="52" width="12" height="22" rx="2" fill="white" opacity="0.95"/>
+
+  <!-- Corpo da casa -->
+  <rect x="52" y="82" width="96" height="68" rx="4" fill="white" opacity="0.95"/>
+
+  <!-- Janela esquerda -->
+  <rect x="66" y="96" width="22" height="20" rx="3" fill="url(#bgGrad)" opacity="0.7"/>
+
+  <!-- Janela direita -->
+  <rect x="112" y="96" width="22" height="20" rx="3" fill="url(#bgGrad)" opacity="0.7"/>
+
+  <!-- Porta -->
+  <rect x="86" y="114" width="28" height="36" rx="3" fill="url(#bgGrad)" opacity="0.5"/>
+  <!-- Maçaneta -->
+  <circle cx="108" cy="134" r="2.5" fill="url(#goldGrad)"/>
+
+  <!-- Círculo dourado do cifrão (badge inferior direito) -->
+  <circle cx="148" cy="148" r="26" fill="url(#goldGrad)" stroke="white" stroke-width="3"/>
+
+  <!-- Símbolo $ -->
+  <text x="148" y="157" text-anchor="middle" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#7D4E00">$</text>
+</svg>

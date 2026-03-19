@@ -1,0 +1,86 @@
+<div class="login-wrapper">
+
+  <!-- LADO ESQUERDO — Gradiente + Logo + Slogan -->
+  <div class="login-left">
+    <div class="login-left-content">
+      <img src="/logo.svg" alt="Alugix Logo" class="logo" />
+      <h1 class="brand-name">Alugix</h1>
+      <p class="brand-slogan">Gerencie seus imóveis com inteligência e simplicidade.</p>
+
+      <div class="features-list">
+        <div class="feature-item">
+          <mat-icon class="feature-icon">home</mat-icon>
+          <span>Controle total dos seus imóveis</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">description</mat-icon>
+          <span>Contratos e inquilinos organizados</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">payments</mat-icon>
+          <span>Acompanhe pagamentos em tempo real</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LADO DIREITO — Formulário -->
+  <div class="login-right">
+    <div class="login-form-container">
+      <div class="form-header">
+        <h2>Bem-vindo de volta</h2>
+        <p>Entre com suas credenciais para continuar</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="seu@email.com" />
+          <mat-icon matSuffix>email</mat-icon>
+          @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+            <mat-error>E-mail é obrigatório</mat-error>
+          } @else if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+            <mat-error>E-mail inválido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="senha" />
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('senha')?.hasError('required') && form.get('senha')?.touched) {
+            <mat-error>Senha é obrigatória</mat-error>
+          } @else if (form.get('senha')?.hasError('minlength') && form.get('senha')?.touched) {
+            <mat-error>Mínimo 6 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage) {
+          <div class="error-banner">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="full-width login-btn"
+          [disabled]="form.invalid || loading"
+        >
+          @if (loading) {
+            <mat-spinner diameter="22" />
+          } @else {
+            Entrar
+          }
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+</div>

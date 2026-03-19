@@ -1,0 +1,196 @@
+// ── Wrapper ────────────────────────────────────────────────────────────────
+.login-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+// ── Lado Esquerdo ──────────────────────────────────────────────────────────
+.login-left {
+  flex: 1;
+  background: linear-gradient(145deg, #1B4F72 0%, #0F2D45 60%, #0A1F30 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  position: relative;
+  overflow: hidden;
+
+  // Círculo decorativo de fundo
+  &::before {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(46, 134, 193, 0.1);
+    top: -100px;
+    right: -100px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(46, 134, 193, 0.08);
+    bottom: -80px;
+    left: -60px;
+  }
+}
+
+.login-left-content {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+  text-align: center;
+  color: white;
+}
+
+.logo {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));
+}
+
+.brand-name {
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0 0 12px;
+  color: #fff;
+}
+
+.brand-slogan {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin-bottom: 48px;
+}
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(4px);
+}
+
+.feature-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  color: rgba(255, 255, 255, 0.9);
+  flex-shrink: 0;
+}
+
+// ── Lado Direito ───────────────────────────────────────────────────────────
+.login-right {
+  width: 480px;
+  min-width: 480px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 360px;
+}
+
+.form-header {
+  margin-bottom: 36px;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1B4F72;
+    margin: 0 0 8px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #7F8C8D;
+    margin: 0;
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.login-btn {
+  margin-top: 12px;
+  height: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background-color: #1B4F72 !important;
+  border-radius: 8px;
+
+  &:not([disabled]):hover {
+    background-color: #2E86C1 !important;
+    transition: background-color 0.2s;
+  }
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFEBEE;
+  border: 1px solid #FFCDD2;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #C62828;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// ── Responsivo ─────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+  }
+
+  .login-left {
+    padding: 32px 24px;
+    min-height: 220px;
+
+    .features-list {
+      display: none; // esconde em mobile para não poluir
+    }
+  }
+
+  .brand-slogan {
+    margin-bottom: 0;
+  }
+
+  .login-right {
+    width: 100%;
+    min-width: unset;
+    padding: 32px 24px;
+  }
+}
