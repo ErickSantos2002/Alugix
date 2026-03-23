@@ -1,0 +1,101 @@
+package com.alugix.service;
+
+import com.alugix.dto.request.InquilinoRequestDTO;
+import com.alugix.dto.response.InquilinoResponseDTO;
+import com.alugix.entity.Inquilino;
+import com.alugix.entity.Usuario;
+import com.alugix.exception.BusinessException;
+import com.alugix.exception.ResourceNotFoundException;
+import com.alugix.mapper.InquilinoMapper;
+import com.alugix.repository.InquilinoRepository;
+import com.alugix.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class InquilinoService {
+
+    private static final Logger logger = LoggerFactory.getLogger(InquilinoService.class);
+
+    private final InquilinoRepository inquilinoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final InquilinoMapper inquilinoMapper;
+
+    public Page<InquilinoResponseDTO> listar(String busca, Pageable pageable) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        Page<Inquilino> page = (busca == null || busca.isBlank())
+                ? inquilinoRepository.findByUsuarioIdAndAtivoTrue(usuarioId, pageable)
+                : inquilinoRepository.findByUsuarioIdAndBusca(usuarioId, busca, pageable);
+        return page.map(inquilinoMapper::toResponse);
+    }
+
+    public InquilinoResponseDTO buscarPorId(Long id) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        return inquilinoMapper.toResponse(buscarInquilinoDoUsuario(id, usuarioId));
+    }
+
+    @Transactional
+    public InquilinoResponseDTO criar(InquilinoRequestDTO dto) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        validarCpfUnico(dto.cpf(), usuarioId, null);
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+
+        Inquilino inquilino = inquilinoMapper.toEntity(dto);
+        inquilino.setUsuario(usuario);
+        inquilino.setStatus("ATIVO");
+        inquilino.setAtivo(true);
+
+        Inquilino salvo = inquilinoRepository.save(inquilino);
+        logger.info("Inquilino criado: id={}, usuarioId={}", salvo.getId(), usuarioId);
+        return inquilinoMapper.toResponse(salvo);
+    }
+
+    @Transactional
+    public InquilinoResponseDTO atualizar(Long id, InquilinoRequestDTO dto) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        Inquilino inquilino = buscarInquilinoDoUsuario(id, usuarioId);
+        validarCpfUnico(dto.cpf(), usuarioId, id);
+
+        inquilinoMapper.updateEntity(dto, inquilino);
+        return inquilinoMapper.toResponse(inquilinoRepository.save(inquilino));
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        Inquilino inquilino = buscarInquilinoDoUsuario(id, usuarioId);
+        inquilino.setAtivo(false);
+        inquilinoRepository.save(inquilino);
+        logger.info("Inquilino desativado: id={}, usuarioId={}", id, usuarioId);
+    }
+
+    private void validarCpfUnico(String cpf, Long usuarioId, Long idAtual) {
+        boolean existe = idAtual == null
+                ? inquilinoRepository.existsByCpfAndUsuarioId(cpf, usuarioId)
+                : inquilinoRepository.existsByCpfAndUsuarioIdAndIdNot(cpf, usuarioId, idAtual);
+        if (existe) {
+            throw new BusinessException("CPF já cadastrado para este usuário");
+        }
+    }
+
+    private Inquilino buscarInquilinoDoUsuario(Long id, Long usuarioId) {
+        return inquilinoRepository.findByIdAndUsuarioIdAndAtivoTrue(id, usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Inquilino não encontrado"));
+    }
+
+    private Long getUsuarioIdAutenticado() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"))
+                .getId();
+    }
+}
