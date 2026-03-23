@@ -1,0 +1,32 @@
+<mat-toolbar class="header-toolbar">
+
+  <!-- Botão hamburguer (mobile) -->
+  <button mat-icon-button (click)="toggleSidenav.emit()" class="menu-btn">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="spacer"></span>
+
+  <!-- Toggle dark/light mode -->
+  <button mat-icon-button
+          [matTooltip]="themeService.isDark() ? 'Modo claro' : 'Modo escuro'"
+          (click)="themeService.toggle()"
+          class="theme-btn">
+    <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+
+  <!-- Menu do usuário -->
+  <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
+    <mat-icon>account_circle</mat-icon>
+    <span class="user-name">{{ getUserName() }}</span>
+    <mat-icon class="arrow-icon">arrow_drop_down</mat-icon>
+  </button>
+
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Sair</span>
+    </button>
+  </mat-menu>
+
+</mat-toolbar>

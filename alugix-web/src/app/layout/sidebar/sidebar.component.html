@@ -1,0 +1,28 @@
+<div class="sidebar-wrapper">
+
+  <div class="sidebar-logo">
+    <img src="/logo.svg" alt="Alugix" class="logo-img" />
+    <span class="logo-text">Alugix</span>
+  </div>
+
+  <nav class="nav-list">
+    @for (item of navItems; track item.route) {
+      <a class="nav-item"
+         [routerLink]="item.route"
+         routerLinkActive="active-link">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </a>
+    }
+
+    @if (isAdmin()) {
+      <a class="nav-item"
+         routerLink="/admin"
+         routerLinkActive="active-link">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>Administração</span>
+      </a>
+    }
+  </nav>
+
+</div>

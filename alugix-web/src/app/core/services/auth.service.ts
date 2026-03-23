@@ -30,7 +30,7 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('usuario');
     this._isAuthenticated$.next(false);
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(['/login']);
   }
 
   // ─── Getters ──────────────────────────────────────────────────────────────
@@ -49,11 +49,20 @@ export class AuthService {
 
   getUsuario(): LoginResponse['usuario'] | null {
     const raw = localStorage.getItem('usuario');
-    return raw ? JSON.parse(raw) : null;
+    if (!raw || raw === 'undefined' || raw === 'null') return null;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
   }
 
   isAdmin(): boolean {
     return this.getRole() === 'ADMIN';
+  }
+
+  getUserName(): string | null {
+    return this.getUsuario()?.nome ?? null;
   }
 
   // ─── Privados ─────────────────────────────────────────────────────────────
