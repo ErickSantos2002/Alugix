@@ -1,0 +1,100 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Inquilinos</h1>
+      <p class="page-subtitle">Gerencie seus inquilinos cadastrados</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="novoInquilino()">
+      <mat-icon>person_add</mat-icon>
+      Novo Inquilino
+    </button>
+  </div>
+
+  <!-- Busca -->
+  <mat-form-field appearance="outline" class="busca-field">
+    <mat-label>Buscar por nome ou CPF</mat-label>
+    <input matInput [formControl]="filtroBusca" placeholder="Digite para buscar..." />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <!-- Tabela -->
+  <div class="table-container mat-elevation-z1">
+
+    @if (loading()) {
+      <div class="loading-overlay">
+        <mat-spinner diameter="48" />
+      </div>
+    }
+
+    <table mat-table [dataSource]="inquilinos()">
+
+      <!-- Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="inquilino-nome">{{ row.nome }}</span>
+        </td>
+      </ng-container>
+
+      <!-- CPF -->
+      <ng-container matColumnDef="cpf">
+        <th mat-header-cell *matHeaderCellDef>CPF</th>
+        <td mat-cell *matCellDef="let row">{{ row.cpf }}</td>
+      </ng-container>
+
+      <!-- Telefone -->
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef>Telefone</th>
+        <td mat-cell *matCellDef="let row">{{ row.telefone }}</td>
+      </ng-container>
+
+      <!-- E-mail -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>E-mail</th>
+        <td mat-cell *matCellDef="let row" class="email-cell">{{ row.email || '—' }}</td>
+      </ng-container>
+
+      <!-- Renda -->
+      <ng-container matColumnDef="rendaMensal">
+        <th mat-header-cell *matHeaderCellDef>Renda Mensal</th>
+        <td mat-cell *matCellDef="let row">{{ formatarRenda(row.rendaMensal) }}</td>
+      </ng-container>
+
+      <!-- Ações -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button matTooltip="Editar" (click)="editarInquilino(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Excluir" color="warn" (click)="excluirInquilino(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;" class="table-row"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td [colSpan]="colunas.length" class="empty-state">
+          <mat-icon>people</mat-icon>
+          <p>Nenhum inquilino encontrado</p>
+          <button mat-stroked-button color="primary" (click)="novoInquilino()">
+            Cadastrar primeiro inquilino
+          </button>
+        </td>
+      </tr>
+
+    </table>
+
+    <mat-paginator
+      [length]="totalElements()"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons />
+
+  </div>
+</div>

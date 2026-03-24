@@ -1,0 +1,92 @@
+<h2 mat-dialog-title>
+  <mat-icon>{{ isEdicao ? 'edit' : 'person_add' }}</mat-icon>
+  {{ isEdicao ? 'Editar Inquilino' : 'Novo Inquilino' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-grid">
+
+    <!-- Nome -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome completo</mat-label>
+      <input matInput formControlName="nome" placeholder="Ex: João da Silva" maxlength="200" />
+      <mat-icon matSuffix>person</mat-icon>
+      <mat-hint align="end">{{ (form.get('nome')?.value?.length ?? 0) }}/200</mat-hint>
+      @if (form.get('nome')?.hasError('required') && form.get('nome')?.touched) {
+        <mat-error>Nome é obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- CPF e Telefone -->
+    <div class="two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" placeholder="000.000.000-00"
+               maxlength="14" (input)="formatarCpf($event)" />
+        @if (form.get('cpf')?.hasError('required') && form.get('cpf')?.touched) {
+          <mat-error>CPF é obrigatório</mat-error>
+        } @else if (form.get('cpf')?.hasError('pattern') && form.get('cpf')?.touched) {
+          <mat-error>CPF inválido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="telefone" placeholder="(00) 00000-0000"
+               maxlength="16" (input)="formatarTelefone($event)" />
+        <mat-icon matSuffix>phone</mat-icon>
+        @if (form.get('telefone')?.hasError('required') && form.get('telefone')?.touched) {
+          <mat-error>Telefone é obrigatório</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- E-mail e Renda -->
+    <div class="two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput formControlName="email" placeholder="joao@email.com" maxlength="200" />
+        <mat-icon matSuffix>email</mat-icon>
+        @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+          <mat-error>E-mail inválido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Renda Mensal</mat-label>
+        <input matInput type="number" formControlName="rendaMensal" placeholder="0,00" min="0.01" />
+        <span matTextSuffix>&nbsp;R$</span>
+        @if (form.get('rendaMensal')?.hasError('min') && form.get('rendaMensal')?.touched) {
+          <mat-error>Valor deve ser maior que zero</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Erro geral -->
+    @if (erro) {
+      <div class="erro-banner">
+        <mat-icon>error_outline</mat-icon>
+        <div>
+          <span>{{ erro }}</span>
+          @for (campo of errosCampos; track campo) {
+            <div class="erro-campo">• {{ campo }}</div>
+          }
+        </div>
+      </div>
+    }
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()" [disabled]="loading">Cancelar</button>
+  <button mat-flat-button color="primary"
+          (click)="salvar()"
+          [disabled]="form.invalid || loading">
+    @if (loading) {
+      <mat-spinner diameter="20" />
+    } @else {
+      {{ isEdicao ? 'Salvar alterações' : 'Cadastrar' }}
+    }
+  </button>
+</mat-dialog-actions>
