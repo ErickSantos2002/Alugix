@@ -1,0 +1,149 @@
+<h2 mat-dialog-title>
+  <mat-icon>{{ isEdicao ? 'edit' : 'add_home' }}</mat-icon>
+  {{ isEdicao ? 'Editar Imóvel' : 'Novo Imóvel' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-grid">
+
+    <!-- Nome -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome do imóvel</mat-label>
+      <input matInput formControlName="nome" placeholder="Ex: Apartamento Centro" maxlength="100" />
+      <mat-hint align="end">{{ (form.get('nome')?.value?.length ?? 0) }}/100</mat-hint>
+      <mat-icon matSuffix>home</mat-icon>
+      @if (form.get('nome')?.hasError('required') && form.get('nome')?.touched) {
+        <mat-error>Nome é obrigatório</mat-error>
+      } @else if (form.get('nome')?.hasError('minlength') && form.get('nome')?.touched) {
+        <mat-error>Mínimo 3 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Endereço -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Endereço (rua e número)</mat-label>
+      <input matInput formControlName="endereco" placeholder="Rua das Flores, 123" maxlength="200" />
+      <mat-hint align="end">{{ (form.get('endereco')?.value?.length ?? 0) }}/200</mat-hint>
+      <mat-icon matSuffix>location_on</mat-icon>
+      @if (form.get('endereco')?.hasError('required') && form.get('endereco')?.touched) {
+        <mat-error>Endereço é obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Cidade, Estado e CEP -->
+    <div class="three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Cidade</mat-label>
+        <input matInput formControlName="cidade" placeholder="São Paulo" maxlength="100" />
+        @if (form.get('cidade')?.hasError('required') && form.get('cidade')?.touched) {
+          <mat-error>Obrigatório</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Estado (UF)</mat-label>
+        <input matInput formControlName="estado" placeholder="SP" maxlength="2" style="text-transform:uppercase" />
+        @if (form.get('estado')?.touched && form.get('estado')?.invalid) {
+          <mat-error>UF inválida</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="cep" placeholder="00000-000" maxlength="9" (input)="formatarCep($event)" />
+        @if (form.get('cep')?.touched && form.get('cep')?.invalid) {
+          <mat-error>CEP inválido</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Tipo, Quartos e Banheiros -->
+    <div class="three-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo</mat-label>
+        <mat-select formControlName="tipo">
+          @for (op of tipoOpcoes; track op.value) {
+            <mat-option [value]="op.value">{{ op.label }}</mat-option>
+          }
+        </mat-select>
+        @if (form.get('tipo')?.hasError('required') && form.get('tipo')?.touched) {
+          <mat-error>Selecione o tipo</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Quartos</mat-label>
+        <input matInput type="number" formControlName="quartos" placeholder="0" min="0" />
+        @if (form.get('quartos')?.touched && form.get('quartos')?.invalid) {
+          <mat-error>Mínimo 0</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Banheiros</mat-label>
+        <input matInput type="number" formControlName="banheiros" placeholder="0" min="0" />
+        @if (form.get('banheiros')?.touched && form.get('banheiros')?.invalid) {
+          <mat-error>Mínimo 0</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Área e Valor -->
+    <div class="two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Área (m²) — opcional</mat-label>
+        <input matInput type="number" formControlName="areaM2" placeholder="65.50" min="1" />
+        <span matTextSuffix>&nbsp;m²</span>
+        @if (form.get('areaM2')?.touched && form.get('areaM2')?.invalid) {
+          <mat-error>Valor inválido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Valor do Aluguel</mat-label>
+        <span matTextPrefix>R$&nbsp;</span>
+        <input matInput type="number" formControlName="valorAluguel" placeholder="0,00" min="1" />
+        @if (form.get('valorAluguel')?.hasError('required') && form.get('valorAluguel')?.touched) {
+          <mat-error>Valor é obrigatório</mat-error>
+        } @else if (form.get('valorAluguel')?.hasError('min') && form.get('valorAluguel')?.touched) {
+          <mat-error>Valor deve ser maior que zero</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Descrição -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição (opcional)</mat-label>
+      <textarea matInput formControlName="descricao" rows="3" maxlength="300"
+                placeholder="Informações adicionais sobre o imóvel..."></textarea>
+      <mat-hint align="end">{{ (form.get('descricao')?.value?.length ?? 0) }}/300</mat-hint>
+    </mat-form-field>
+
+    <!-- Erro geral -->
+    @if (erro) {
+      <div class="erro-banner">
+        <mat-icon>error_outline</mat-icon>
+        <div>
+          <span>{{ erro }}</span>
+          @for (campo of errosCampos; track campo) {
+            <div class="erro-campo">• {{ campo }}</div>
+          }
+        </div>
+      </div>
+    }
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()" [disabled]="loading">Cancelar</button>
+  <button mat-flat-button color="primary"
+          (click)="salvar()"
+          [disabled]="form.invalid || loading">
+    @if (loading) {
+      <mat-spinner diameter="20" />
+    } @else {
+      {{ isEdicao ? 'Salvar alterações' : 'Cadastrar' }}
+    }
+  </button>
+</mat-dialog-actions>

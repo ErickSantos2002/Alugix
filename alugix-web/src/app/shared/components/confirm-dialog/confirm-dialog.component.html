@@ -1,0 +1,22 @@
+<div class="dialog-wrapper">
+
+  <div class="dialog-icon">
+    <mat-icon>warning_amber</mat-icon>
+  </div>
+
+  <h2 mat-dialog-title>{{ data.titulo }}</h2>
+
+  <mat-dialog-content>
+    <p>{{ data.mensagem }}</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">
+      {{ data.cancelLabel ?? 'Cancelar' }}
+    </button>
+    <button mat-flat-button color="warn" (click)="confirmar()">
+      {{ data.confirmLabel ?? 'Excluir' }}
+    </button>
+  </mat-dialog-actions>
+
+</div>

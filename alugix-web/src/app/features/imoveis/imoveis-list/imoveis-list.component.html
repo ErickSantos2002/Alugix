@@ -1,0 +1,122 @@
+<div class="page-container">
+
+  <!-- Cabeçalho da página -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Imóveis</h1>
+      <p class="page-subtitle">Gerencie seus imóveis cadastrados</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="novoImovel()">
+      <mat-icon>add</mat-icon>
+      Novo Imóvel
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros-container">
+    <mat-form-field appearance="outline" class="filtro-field">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="filtroStatus">
+        @for (op of statusOpcoes; track op.value) {
+          <mat-option [value]="op.value">{{ op.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filtro-field">
+      <mat-label>Tipo</mat-label>
+      <mat-select [formControl]="filtroTipo">
+        @for (op of tipoOpcoes; track op.value) {
+          <mat-option [value]="op.value">{{ op.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Tabela -->
+  <div class="table-container mat-elevation-z1">
+
+    @if (loading()) {
+      <div class="loading-overlay">
+        <mat-spinner diameter="48" />
+      </div>
+    }
+
+    <table mat-table [dataSource]="imoveis()">
+
+      <!-- Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="imovel-nome">{{ row.nome }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Tipo -->
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let row">{{ getTipoLabel(row.tipo) }}</td>
+      </ng-container>
+
+      <!-- Endereço -->
+      <ng-container matColumnDef="endereco">
+        <th mat-header-cell *matHeaderCellDef>Endereço</th>
+        <td mat-cell *matCellDef="let row" class="endereco-cell">{{ row.endereco }}</td>
+      </ng-container>
+
+      <!-- Valor -->
+      <ng-container matColumnDef="valorAluguel">
+        <th mat-header-cell *matHeaderCellDef>Aluguel</th>
+        <td mat-cell *matCellDef="let row">
+          <strong>{{ formatarValor(row.valorAluguel) }}</strong>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="status-badge" [class]="'status-' + row.status.toLowerCase()">
+            {{ getStatusLabel(row.status) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Ações -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button matTooltip="Editar" (click)="editarImovel(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Excluir" color="warn" (click)="excluirImovel(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+      <tr mat-row *matRowDef="let row; columns: colunas;" class="table-row"></tr>
+
+      <!-- Empty state -->
+      <tr class="mat-row" *matNoDataRow>
+        <td [colSpan]="colunas.length" class="empty-state">
+          <mat-icon>home_work</mat-icon>
+          <p>Nenhum imóvel encontrado</p>
+          <button mat-stroked-button color="primary" (click)="novoImovel()">
+            Cadastrar primeiro imóvel
+          </button>
+        </td>
+      </tr>
+
+    </table>
+
+    <mat-paginator
+      [length]="totalElements()"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons />
+
+  </div>
+</div>

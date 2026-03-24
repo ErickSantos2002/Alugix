@@ -1,3 +1,5 @@
+export type PageResponse<T> = Page<T>;
+
 export interface Page<T> {
   content: T[];
   totalElements: number;
