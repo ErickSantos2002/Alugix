@@ -31,9 +31,9 @@ public class ImovelService {
     private final UsuarioRepository usuarioRepository;
     private final ImovelMapper imovelMapper;
 
-    public Page<ImovelResponseDTO> listar(StatusImovel status, TipoImovel tipo, Pageable pageable) {
+    public Page<ImovelResponseDTO> listar(Boolean ativo, StatusImovel status, TipoImovel tipo, Pageable pageable) {
         Long usuarioId = getUsuarioIdAutenticado();
-        return imovelRepository.findByUsuarioIdAndFiltros(usuarioId, status, tipo, pageable)
+        return imovelRepository.findByUsuarioIdAndFiltros(usuarioId, ativo, status, tipo, pageable)
                 .map(imovelMapper::toResponse);
     }
 

@@ -16,12 +16,13 @@ public interface ImovelRepository extends JpaRepository<Imovel, Long> {
     @Query("""
             SELECT i FROM Imovel i
             WHERE i.usuario.id = :usuarioId
-              AND i.ativo = true
+              AND (:ativo IS NULL OR i.ativo = :ativo)
               AND (:status IS NULL OR i.status = :status)
               AND (:tipo IS NULL OR i.tipo = :tipo)
             """)
     Page<Imovel> findByUsuarioIdAndFiltros(
             @Param("usuarioId") Long usuarioId,
+            @Param("ativo") Boolean ativo,
             @Param("status") StatusImovel status,
             @Param("tipo") TipoImovel tipo,
             Pageable pageable);
