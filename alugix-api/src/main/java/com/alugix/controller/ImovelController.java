@@ -74,9 +74,17 @@ public class ImovelController {
         return ResponseEntity.ok(imovelService.atualizarStatus(id, dto));
     }
 
+    @PatchMapping("/{id}/ativo")
+    @Operation(summary = "Alternar ativo/inativo do imóvel", description = "Desativa ou reativa um imóvel sem excluí-lo do sistema.")
+    @ApiResponse(responseCode = "200", description = "Estado alterado com sucesso")
+    @ApiResponse(responseCode = "404", description = "Imóvel não encontrado")
+    public ResponseEntity<ImovelResponseDTO> alternarAtivo(@PathVariable Long id) {
+        return ResponseEntity.ok(imovelService.alternarAtivo(id));
+    }
+
     @DeleteMapping("/{id}")
-    @Operation(summary = "Remover imóvel (soft delete)")
-    @ApiResponse(responseCode = "204", description = "Imóvel removido com sucesso")
+    @Operation(summary = "Excluir imóvel permanentemente")
+    @ApiResponse(responseCode = "204", description = "Imóvel excluído com sucesso")
     @ApiResponse(responseCode = "404", description = "Imóvel não encontrado")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         imovelService.deletar(id);

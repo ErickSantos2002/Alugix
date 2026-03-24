@@ -19,6 +19,7 @@ public record ImovelResponseDTO(
         BigDecimal areaM2,
         BigDecimal valorAluguel,
         StatusImovel status,
+        Boolean ativo,
         String descricao,
         LocalDateTime createdAt
 ) {}

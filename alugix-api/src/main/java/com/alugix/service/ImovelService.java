@@ -62,23 +62,25 @@ public class ImovelService {
     public ImovelResponseDTO atualizar(Long id, ImovelRequestDTO dto) {
         Long usuarioId = getUsuarioIdAutenticado();
         Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
-        imovelMapper.updateEntity(dto, imovel);
         if (dto.status() != null) {
-            imovel.setStatus(dto.status());
+            if (imovel.getStatus() == StatusImovel.ALUGADO) {
+                throw new BusinessException("Imóvel alugado não pode ter o status alterado manualmente");
+            }
+            if (dto.status() == StatusImovel.ALUGADO) {
+                throw new BusinessException("Status ALUGADO é gerenciado automaticamente pelo sistema");
+            }
         }
+        imovelMapper.updateEntity(dto, imovel);
         return imovelMapper.toResponse(imovelRepository.save(imovel));
     }
 
     @Transactional
-    public ImovelResponseDTO alternarManutencao(Long id) {
+    public ImovelResponseDTO alternarAtivo(Long id) {
         Long usuarioId = getUsuarioIdAutenticado();
-        Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
-        if (imovel.getStatus() == StatusImovel.MANUTENCAO) {
-            imovel.setStatus(StatusImovel.DISPONIVEL);
-        } else {
-            imovel.setStatus(StatusImovel.MANUTENCAO);
-        }
-        logger.info("Status de manutenção alterado: id={}, status={}", id, imovel.getStatus());
+        Imovel imovel = imovelRepository.findByIdAndUsuarioId(id, usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Imóvel não encontrado"));
+        imovel.setAtivo(!imovel.getAtivo());
+        logger.info("Imóvel id={} ativo alterado para {}", id, imovel.getAtivo());
         return imovelMapper.toResponse(imovelRepository.save(imovel));
     }
 

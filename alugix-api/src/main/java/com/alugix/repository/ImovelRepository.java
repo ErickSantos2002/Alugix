@@ -27,4 +27,6 @@ public interface ImovelRepository extends JpaRepository<Imovel, Long> {
             Pageable pageable);
 
     Optional<Imovel> findByIdAndUsuarioIdAndAtivoTrue(Long id, Long usuarioId);
+
+    Optional<Imovel> findByIdAndUsuarioId(Long id, Long usuarioId);
 }
