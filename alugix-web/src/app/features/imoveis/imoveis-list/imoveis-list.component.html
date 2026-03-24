@@ -89,6 +89,13 @@
           <button mat-icon-button matTooltip="Editar" (click)="editarImovel(row)">
             <mat-icon>edit</mat-icon>
           </button>
+          <button mat-icon-button
+                  [matTooltip]="row.status === 'MANUTENCAO' ? 'Retornar para Disponível' : 'Colocar em Manutenção'"
+                  [color]="row.status === 'MANUTENCAO' ? 'primary' : ''"
+                  [disabled]="row.status === 'ALUGADO'"
+                  (click)="alternarManutencao(row)">
+            <mat-icon>build</mat-icon>
+          </button>
           <button mat-icon-button matTooltip="Excluir" color="warn" (click)="excluirImovel(row)">
             <mat-icon>delete</mat-icon>
           </button>

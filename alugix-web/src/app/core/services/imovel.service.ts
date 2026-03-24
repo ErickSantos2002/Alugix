@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ImovelRequest, ImovelResponse } from '../models/imovel.model';
+import { ImovelRequest, ImovelResponse, StatusImovel } from '../models/imovel.model';
 import { PageResponse } from '../models/pagination.model';
 
 @Injectable({ providedIn: 'root' })
@@ -36,5 +36,9 @@ export class ImovelService {
 
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.BASE}/${id}`);
+  }
+
+  atualizarStatus(id: number, status: StatusImovel): Observable<ImovelResponse> {
+    return this.http.patch<ImovelResponse>(`${this.BASE}/${id}/status`, { status });
   }
 }

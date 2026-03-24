@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ImovelService } from '../../../core/services/imovel.service';
-import { ImovelResponse, TipoImovel } from '../../../core/models/imovel.model';
+import { ImovelResponse, StatusImovel, TipoImovel } from '../../../core/models/imovel.model';
 
 // Dado recebido ao abrir o dialog (null = novo, ImovelResponse = edição)
 export type ImovelFormData = ImovelResponse | null;
@@ -42,6 +42,12 @@ export class ImovelFormComponent implements OnInit {
     { value: 'CASA', label: 'Casa' },
     { value: 'APARTAMENTO', label: 'Apartamento' },
     { value: 'SALA_COMERCIAL', label: 'Sala Comercial' },
+  ];
+
+  readonly statusOpcoes: { value: StatusImovel; label: string }[] = [
+    { value: 'DISPONIVEL', label: 'Disponível' },
+    { value: 'ALUGADO', label: 'Alugado' },
+    { value: 'MANUTENCAO', label: 'Manutenção' },
   ];
 
   form!: FormGroup;

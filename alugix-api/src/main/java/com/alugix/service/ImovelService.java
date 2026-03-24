@@ -63,6 +63,22 @@ public class ImovelService {
         Long usuarioId = getUsuarioIdAutenticado();
         Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
         imovelMapper.updateEntity(dto, imovel);
+        if (dto.status() != null) {
+            imovel.setStatus(dto.status());
+        }
+        return imovelMapper.toResponse(imovelRepository.save(imovel));
+    }
+
+    @Transactional
+    public ImovelResponseDTO alternarManutencao(Long id) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
+        if (imovel.getStatus() == StatusImovel.MANUTENCAO) {
+            imovel.setStatus(StatusImovel.DISPONIVEL);
+        } else {
+            imovel.setStatus(StatusImovel.MANUTENCAO);
+        }
+        logger.info("Status de manutenção alterado: id={}, status={}", id, imovel.getStatus());
         return imovelMapper.toResponse(imovelRepository.save(imovel));
     }
 
@@ -87,9 +103,8 @@ public class ImovelService {
     public void deletar(Long id) {
         Long usuarioId = getUsuarioIdAutenticado();
         Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
-        imovel.setAtivo(false);
-        imovelRepository.save(imovel);
-        logger.info("Imóvel desativado: id={}, usuarioId={}", id, usuarioId);
+        imovelRepository.delete(imovel);
+        logger.info("Imóvel excluído: id={}, usuarioId={}", id, usuarioId);
     }
 
     private Imovel buscarImovelDoUsuario(Long id, Long usuarioId) {

@@ -157,6 +157,33 @@ export class ImoveisListComponent implements OnInit {
     });
   }
 
+  alternarManutencao(imovel: ImovelResponse): void {
+    const entrando = imovel.status !== 'MANUTENCAO';
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        titulo: entrando ? 'Colocar em manutenção' : 'Retornar para disponível',
+        mensagem: entrando
+          ? `Tem certeza que deseja colocar "${imovel.endereco}" em manutenção?`
+          : `Tem certeza que deseja retornar "${imovel.endereco}" para disponível?`,
+        confirmLabel: entrando ? 'Colocar em manutenção' : 'Retornar',
+      },
+      width: '420px',
+    });
+
+    ref.afterClosed().subscribe((confirmado) => {
+      if (!confirmado) return;
+      const novoStatus = entrando ? 'MANUTENCAO' : 'DISPONIVEL';
+      this.imovelService.atualizarStatus(imovel.id, novoStatus).subscribe({
+        next: () => {
+          const msg = entrando ? 'Imóvel em manutenção.' : 'Imóvel disponível.';
+          this.snackBar.open(msg, 'Fechar', { duration: 3000 });
+          this.carregar();
+        },
+        error: () => this.snackBar.open('Erro ao alterar status.', 'Fechar', { duration: 3000 }),
+      });
+    });
+  }
+
   excluirImovel(imovel: ImovelResponse): void {
     const ref = this.dialog.open(ConfirmDialogComponent, {
       data: {

@@ -1,5 +1,6 @@
 package com.alugix.dto.request;
 
+import com.alugix.enums.StatusImovel;
 import com.alugix.enums.TipoImovel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -58,5 +59,8 @@ public record ImovelRequestDTO(
 
         @Size(max = 1000)
         @Schema(description = "Descrição", example = "Apartamento bem localizado com varanda")
-        String descricao
+        String descricao,
+
+        @Schema(description = "Status do imóvel (apenas para edição)", example = "MANUTENCAO")
+        StatusImovel status
 ) {}

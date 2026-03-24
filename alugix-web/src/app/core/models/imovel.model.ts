@@ -13,6 +13,7 @@ export interface ImovelRequest {
   areaM2?: number;
   valorAluguel: number;
   descricao?: string;
+  status?: StatusImovel;
 }
 
 export interface ImovelResponse {
