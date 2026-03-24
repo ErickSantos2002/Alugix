@@ -1,6 +1,7 @@
 package com.alugix.controller;
 
 import com.alugix.dto.request.ImovelRequestDTO;
+import com.alugix.dto.request.ImovelStatusRequestDTO;
 import com.alugix.dto.response.ImovelResponseDTO;
 import com.alugix.enums.StatusImovel;
 import com.alugix.enums.TipoImovel;
@@ -60,6 +61,17 @@ public class ImovelController {
             @PathVariable Long id,
             @Valid @RequestBody ImovelRequestDTO dto) {
         return ResponseEntity.ok(imovelService.atualizar(id, dto));
+    }
+
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "Alterar status do imóvel", description = "Permite alternar entre DISPONIVEL e MANUTENCAO. Status ALUGADO é gerenciado automaticamente pelo sistema.")
+    @ApiResponse(responseCode = "200", description = "Status atualizado com sucesso")
+    @ApiResponse(responseCode = "404", description = "Imóvel não encontrado")
+    @ApiResponse(responseCode = "422", description = "Operação não permitida para o status atual")
+    public ResponseEntity<ImovelResponseDTO> atualizarStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody ImovelStatusRequestDTO dto) {
+        return ResponseEntity.ok(imovelService.atualizarStatus(id, dto));
     }
 
     @DeleteMapping("/{id}")

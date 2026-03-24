@@ -1,11 +1,13 @@
 package com.alugix.service;
 
 import com.alugix.dto.request.ImovelRequestDTO;
+import com.alugix.dto.request.ImovelStatusRequestDTO;
 import com.alugix.dto.response.ImovelResponseDTO;
 import com.alugix.entity.Imovel;
 import com.alugix.entity.Usuario;
 import com.alugix.enums.StatusImovel;
 import com.alugix.enums.TipoImovel;
+import com.alugix.exception.BusinessException;
 import com.alugix.exception.ResourceNotFoundException;
 import com.alugix.mapper.ImovelMapper;
 import com.alugix.repository.ImovelRepository;
@@ -61,6 +63,23 @@ public class ImovelService {
         Long usuarioId = getUsuarioIdAutenticado();
         Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
         imovelMapper.updateEntity(dto, imovel);
+        return imovelMapper.toResponse(imovelRepository.save(imovel));
+    }
+
+    @Transactional
+    public ImovelResponseDTO atualizarStatus(Long id, ImovelStatusRequestDTO dto) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
+
+        if (imovel.getStatus() == StatusImovel.ALUGADO) {
+            throw new BusinessException("Imóvel alugado não pode ter o status alterado manualmente");
+        }
+        if (dto.status() == StatusImovel.ALUGADO) {
+            throw new BusinessException("Status ALUGADO é gerenciado automaticamente pelo sistema");
+        }
+
+        imovel.setStatus(dto.status());
+        logger.info("Status do imóvel id={} alterado para {} por usuarioId={}", id, dto.status(), usuarioId);
         return imovelMapper.toResponse(imovelRepository.save(imovel));
     }
 
