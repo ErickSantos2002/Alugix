@@ -28,11 +28,11 @@ public class InquilinoService {
     private final UsuarioRepository usuarioRepository;
     private final InquilinoMapper inquilinoMapper;
 
-    public Page<InquilinoResponseDTO> listar(String busca, Pageable pageable) {
+    public Page<InquilinoResponseDTO> listar(Boolean ativo, String busca, Pageable pageable) {
         Long usuarioId = getUsuarioIdAutenticado();
         Page<Inquilino> page = (busca == null || busca.isBlank())
-                ? inquilinoRepository.findByUsuarioIdAndAtivoTrue(usuarioId, pageable)
-                : inquilinoRepository.findByUsuarioIdAndBusca(usuarioId, busca, pageable);
+                ? inquilinoRepository.findByUsuarioIdAndFiltros(usuarioId, ativo, pageable)
+                : inquilinoRepository.findByUsuarioIdAndBusca(usuarioId, ativo, busca, pageable);
         return page.map(inquilinoMapper::toResponse);
     }
 
@@ -70,12 +70,21 @@ public class InquilinoService {
     }
 
     @Transactional
+    public InquilinoResponseDTO alternarAtivo(Long id) {
+        Long usuarioId = getUsuarioIdAutenticado();
+        Inquilino inquilino = inquilinoRepository.findByIdAndUsuarioId(id, usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Inquilino não encontrado"));
+        inquilino.setAtivo(!inquilino.getAtivo());
+        logger.info("Inquilino id={} ativo alterado para {}", id, inquilino.getAtivo());
+        return inquilinoMapper.toResponse(inquilinoRepository.save(inquilino));
+    }
+
+    @Transactional
     public void deletar(Long id) {
         Long usuarioId = getUsuarioIdAutenticado();
         Inquilino inquilino = buscarInquilinoDoUsuario(id, usuarioId);
-        inquilino.setAtivo(false);
-        inquilinoRepository.save(inquilino);
-        logger.info("Inquilino desativado: id={}, usuarioId={}", id, usuarioId);
+        inquilinoRepository.delete(inquilino);
+        logger.info("Inquilino excluído: id={}, usuarioId={}", id, usuarioId);
     }
 
     private void validarCpfUnico(String cpf, Long usuarioId, Long idAtual) {

@@ -174,6 +174,25 @@ Request HTTP → Controller → Service → Repository → Database
 | Entity     | Mapeamento JPA                                | Ser exposta na API (sempre usar DTO)          |
 | DTO        | Transferência de dados                        | Anotações JPA                                 |
 
+### Padrão de Exclusão e Ativação (obrigatório a partir da Sprint 2)
+
+Todo recurso com campo `ativo` deve seguir este padrão:
+
+- **DELETE físico** — `DELETE /{id}` remove o registro do banco permanentemente
+- **Toggle ativo** — `PATCH /{id}/ativo` alterna entre ativo/inativo sem excluir
+- **Listagem retorna todos** — `GET /recurso` retorna ativos e inativos por padrão
+- **Filtro opcional** — `GET /recurso?ativo=true` ou `?ativo=false` para filtrar
+- **Campo `ativo` no ResponseDTO** — sempre incluir para o front poder exibir o estado
+- **buscarPorId** continua filtrando por `ativoTrue` (recurso inativo não é acessível individualmente sem reativar)
+
+```
+PATCH /imoveis/{id}/ativo    → alterna ativo/inativo
+DELETE /imoveis/{id}         → exclui permanentemente
+GET /imoveis                 → retorna todos
+GET /imoveis?ativo=true      → só ativos
+GET /imoveis?ativo=false     → só inativos
+```
+
 ### Regras Obrigatórias
 
 - `@RequiredArgsConstructor` em Controllers e Services (injeção via construtor)

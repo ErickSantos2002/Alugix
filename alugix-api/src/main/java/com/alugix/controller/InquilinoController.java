@@ -28,9 +28,10 @@ public class InquilinoController {
     @Operation(summary = "Listar inquilinos", description = "Lista paginada com busca opcional por nome ou CPF")
     @ApiResponse(responseCode = "200", description = "Listagem realizada com sucesso")
     public ResponseEntity<Page<InquilinoResponseDTO>> listar(
+            @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) String busca,
             Pageable pageable) {
-        return ResponseEntity.ok(inquilinoService.listar(busca, pageable));
+        return ResponseEntity.ok(inquilinoService.listar(ativo, busca, pageable));
     }
 
     @GetMapping("/{id}")
@@ -61,9 +62,17 @@ public class InquilinoController {
         return ResponseEntity.ok(inquilinoService.atualizar(id, dto));
     }
 
+    @PatchMapping("/{id}/ativo")
+    @Operation(summary = "Alternar ativo/inativo do inquilino", description = "Desativa ou reativa um inquilino sem excluí-lo do sistema.")
+    @ApiResponse(responseCode = "200", description = "Estado alterado com sucesso")
+    @ApiResponse(responseCode = "404", description = "Inquilino não encontrado")
+    public ResponseEntity<InquilinoResponseDTO> alternarAtivo(@PathVariable Long id) {
+        return ResponseEntity.ok(inquilinoService.alternarAtivo(id));
+    }
+
     @DeleteMapping("/{id}")
-    @Operation(summary = "Remover inquilino (soft delete)")
-    @ApiResponse(responseCode = "204", description = "Inquilino removido com sucesso")
+    @Operation(summary = "Excluir inquilino permanentemente")
+    @ApiResponse(responseCode = "204", description = "Inquilino excluído com sucesso")
     @ApiResponse(responseCode = "404", description = "Inquilino não encontrado")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         inquilinoService.deletar(id);

@@ -11,5 +11,6 @@ public record InquilinoResponseDTO(
         String email,
         BigDecimal rendaMensal,
         String status,
+        Boolean ativo,
         LocalDateTime createdAt
 ) {}
