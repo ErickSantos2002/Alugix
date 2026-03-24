@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 public record ImovelResponseDTO(
         Long id,
+        String nome,
         String endereco,
         String cep,
         String cidade,

@@ -9,6 +9,11 @@ import java.math.BigDecimal;
 public record ImovelRequestDTO(
 
         @NotBlank
+        @Size(max = 150)
+        @Schema(description = "Nome/apelido do imóvel", example = "Apto Centro")
+        String nome,
+
+        @NotBlank
         @Size(max = 300)
         @Schema(description = "Endereço completo", example = "Rua das Flores, 123, Apto 45")
         String endereco,

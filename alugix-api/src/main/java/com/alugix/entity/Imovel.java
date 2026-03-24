@@ -28,6 +28,9 @@ public class Imovel {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "nome", nullable = false, length = 150)
+    private String nome;
+
     @Column(name = "endereco", nullable = false, length = 300)
     private String endereco;
 
