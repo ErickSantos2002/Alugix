@@ -31,6 +31,15 @@
         }
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filtro-field">
+      <mat-label>Situação</mat-label>
+      <mat-select [formControl]="filtroAtivo">
+        <mat-option value="true">Ativo</mat-option>
+        <mat-option value="false">Desativado</mat-option>
+        <mat-option value="">Todos</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <!-- Tabela -->
@@ -82,9 +91,23 @@
         </td>
       </ng-container>
 
+      <!-- Ativo -->
+      <ng-container matColumnDef="ativo">
+        <th mat-header-cell *matHeaderCellDef>Ativo</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button
+                  [matTooltip]="row.ativo ? 'Desativar' : 'Ativar'"
+                  (click)="alternarAtivo(row)">
+            <mat-icon [style.color]="row.ativo ? '#2E7D32' : '#C62828'">
+              {{ row.ativo ? 'toggle_on' : 'toggle_off' }}
+            </mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <!-- Ações -->
       <ng-container matColumnDef="acoes">
-        <th mat-header-cell *matHeaderCellDef></th>
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
         <td mat-cell *matCellDef="let row">
           <button mat-icon-button matTooltip="Editar" (click)="editarImovel(row)">
             <mat-icon>edit</mat-icon>

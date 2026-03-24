@@ -10,7 +10,7 @@ export class ImovelService {
   private readonly BASE = '/api/v1/imoveis';
 
   // Busca lista paginada. O back aceita: page, size, sort, status, tipo
-  listar(page = 0, size = 10, filtros?: { status?: string; tipo?: string }): Observable<PageResponse<ImovelResponse>> {
+  listar(page = 0, size = 10, filtros?: { status?: string; tipo?: string; ativo?: boolean }): Observable<PageResponse<ImovelResponse>> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
@@ -18,6 +18,7 @@ export class ImovelService {
 
     if (filtros?.status) params = params.set('status', filtros.status);
     if (filtros?.tipo)   params = params.set('tipo', filtros.tipo);
+    if (filtros?.ativo !== undefined) params = params.set('ativo', String(filtros.ativo));
 
     return this.http.get<PageResponse<ImovelResponse>>(this.BASE, { params });
   }
@@ -40,5 +41,9 @@ export class ImovelService {
 
   atualizarStatus(id: number, status: StatusImovel): Observable<ImovelResponse> {
     return this.http.patch<ImovelResponse>(`${this.BASE}/${id}/status`, { status });
+  }
+
+  alternarAtivo(id: number): Observable<ImovelResponse> {
+    return this.http.patch<ImovelResponse>(`${this.BASE}/${id}/ativo`, {});
   }
 }

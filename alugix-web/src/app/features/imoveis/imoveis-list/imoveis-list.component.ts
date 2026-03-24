@@ -51,7 +51,7 @@ export class ImoveisListComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
 
   // Colunas da tabela
-  readonly colunas = ['nome', 'tipo', 'endereco', 'valorAluguel', 'status', 'acoes'];
+  readonly colunas = ['nome', 'tipo', 'endereco', 'valorAluguel', 'status', 'ativo', 'acoes'];
 
   // Estado da tela
   imoveis = signal<ImovelResponse[]>([]);
@@ -63,6 +63,7 @@ export class ImoveisListComponent implements OnInit {
   // Filtros
   readonly filtroStatus = new FormControl('');
   readonly filtroTipo = new FormControl('');
+  readonly filtroAtivo = new FormControl('true');
 
   readonly statusOpcoes: { value: string; label: string }[] = [
     { value: '', label: 'Todos' },
@@ -89,13 +90,19 @@ export class ImoveisListComponent implements OnInit {
     this.filtroTipo.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe(() => { this.pageIndex = 0; this.carregar(); });
+
+    this.filtroAtivo.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(() => { this.pageIndex = 0; this.carregar(); });
   }
 
   carregar(): void {
     this.loading.set(true);
+    const ativoVal = this.filtroAtivo.value;
     this.imovelService.listar(this.pageIndex, this.pageSize, {
       status: this.filtroStatus.value || undefined,
       tipo: this.filtroTipo.value || undefined,
+      ativo: ativoVal === '' ? undefined : ativoVal === 'true',
     }).subscribe({
       next: (page) => {
         this.imoveis.set(page.content);
@@ -154,6 +161,31 @@ export class ImoveisListComponent implements OnInit {
         this.snackBar.open('Imóvel atualizado com sucesso!', 'Fechar', { duration: 3000 });
         this.carregar();
       }
+    });
+  }
+
+  alternarAtivo(imovel: ImovelResponse): void {
+    const ativando = !imovel.ativo;
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        titulo: ativando ? 'Ativar imóvel' : 'Desativar imóvel',
+        mensagem: ativando
+          ? `Deseja reativar "${imovel.nome}"?`
+          : `Deseja desativar "${imovel.nome}"? Ele não aparecerá em novas operações.`,
+        confirmLabel: ativando ? 'Ativar' : 'Desativar',
+      },
+      width: '420px',
+    });
+
+    ref.afterClosed().subscribe((confirmado) => {
+      if (!confirmado) return;
+      this.imovelService.alternarAtivo(imovel.id).subscribe({
+        next: () => {
+          this.snackBar.open(ativando ? 'Imóvel ativado.' : 'Imóvel desativado.', 'Fechar', { duration: 3000 });
+          this.carregar();
+        },
+        error: () => this.snackBar.open('Erro ao alterar estado.', 'Fechar', { duration: 3000 }),
+      });
     });
   }
 

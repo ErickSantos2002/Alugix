@@ -29,6 +29,7 @@ export interface ImovelResponse {
   banheiros: number;
   areaM2?: number;
   valorAluguel: number;
+  ativo: boolean;
   descricao?: string;
   createdAt: string;
 }
