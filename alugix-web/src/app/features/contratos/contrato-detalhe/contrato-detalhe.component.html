@@ -1,0 +1,133 @@
+<div class="page-container">
+
+  @if (loading()) {
+    <div class="loading-center">
+      <mat-spinner diameter="48" />
+    </div>
+  }
+
+  @if (!loading() && contrato(); as c) {
+
+    <!-- Cabeçalho -->
+    <div class="page-header">
+      <div class="header-left">
+        <button mat-icon-button matTooltip="Voltar" (click)="voltar()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div>
+          <h1 class="page-title">Contrato #{{ c.id }}</h1>
+          <p class="page-subtitle">{{ c.imovel.nome }} — {{ c.inquilino.nome }}</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="status-badge" [class]="'status-' + c.status.toLowerCase()">
+          {{ getStatusLabel(c.status) }}
+        </span>
+        @if (c.status === 'ATIVO' || c.status === 'ATRASADO') {
+          <button mat-stroked-button color="warn" (click)="encerrarContrato()">
+            <mat-icon>cancel</mat-icon>
+            Encerrar Contrato
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Cards de informação -->
+    <div class="info-grid">
+
+      <!-- Imóvel -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <mat-icon>home</mat-icon>
+          <span>Imóvel</span>
+        </div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-label">Nome</span>
+            <span class="info-value">{{ c.imovel.nome }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Endereço</span>
+            <span class="info-value">{{ c.imovel.endereco }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Tipo</span>
+            <span class="info-value">{{ c.imovel.tipo }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inquilino -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <mat-icon>person</mat-icon>
+          <span>Inquilino</span>
+        </div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-label">Nome</span>
+            <span class="info-value">{{ c.inquilino.nome }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">CPF</span>
+            <span class="info-value">{{ c.inquilino.cpf }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Valores e Datas -->
+      <div class="info-card">
+        <div class="info-card-header">
+          <mat-icon>payments</mat-icon>
+          <span>Valores e Período</span>
+        </div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-label">Valor Mensal</span>
+            <span class="info-value valor-destaque">{{ formatarValor(c.valorAluguel) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Dia de Vencimento</span>
+            <span class="info-value">Dia {{ c.diaVencimento }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Início</span>
+            <span class="info-value">{{ formatarData(c.dataInicio) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Término</span>
+            <span class="info-value">{{ formatarData(c.dataTermino) }}</span>
+          </div>
+        </div>
+      </div>
+
+      @if (c.observacoes) {
+        <!-- Observações -->
+        <div class="info-card info-card-full">
+          <div class="info-card-header">
+            <mat-icon>notes</mat-icon>
+            <span>Observações</span>
+          </div>
+          <div class="info-card-body">
+            <p class="observacoes-text">{{ c.observacoes }}</p>
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Pagamentos (placeholder Sprint 5) -->
+    <div class="pagamentos-section">
+      <div class="section-header">
+        <mat-icon>receipt_long</mat-icon>
+        <h2>Histórico de Pagamentos</h2>
+      </div>
+      <div class="pagamentos-placeholder">
+        <mat-icon>hourglass_empty</mat-icon>
+        <p>Os pagamentos serão exibidos aqui após a Sprint 5.</p>
+      </div>
+    </div>
+
+  }
+
+</div>

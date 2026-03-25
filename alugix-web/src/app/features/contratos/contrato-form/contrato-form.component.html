@@ -1,0 +1,124 @@
+<h2 mat-dialog-title>
+  <mat-icon>description</mat-icon>
+  Novo Contrato
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form-grid">
+
+    <!-- Imóvel -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Imóvel</mat-label>
+      <mat-select formControlName="imovelId">
+        @for (i of imoveis; track i.id) {
+          <mat-option [value]="i.id">{{ i.nome }} — {{ i.endereco }}</mat-option>
+        }
+      </mat-select>
+      <mat-icon matSuffix>home</mat-icon>
+      @if (form.get('imovelId')?.hasError('required') && form.get('imovelId')?.touched) {
+        <mat-error>Selecione um imóvel</mat-error>
+      }
+      @if (imoveis.length === 0) {
+        <mat-hint>Nenhum imóvel disponível</mat-hint>
+      }
+    </mat-form-field>
+
+    <!-- Inquilino -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Inquilino</mat-label>
+      <mat-select formControlName="inquilinoId">
+        @for (i of inquilinos; track i.id) {
+          <mat-option [value]="i.id">{{ i.nome }} — {{ i.cpf }}</mat-option>
+        }
+      </mat-select>
+      <mat-icon matSuffix>person</mat-icon>
+      @if (form.get('inquilinoId')?.hasError('required') && form.get('inquilinoId')?.touched) {
+        <mat-error>Selecione um inquilino</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Datas -->
+    <div class="two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Data de Início</mat-label>
+        <input matInput appDateMask [matDatepicker]="pickerInicio" formControlName="dataInicio" placeholder="DD/MM/AAAA" />
+        <mat-datepicker-toggle matSuffix [for]="pickerInicio" />
+        <mat-datepicker #pickerInicio />
+        @if (form.get('dataInicio')?.hasError('required') && form.get('dataInicio')?.touched) {
+          <mat-error>Obrigatório</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data de Término</mat-label>
+        <input matInput appDateMask [matDatepicker]="pickerTermino" formControlName="dataTermino" placeholder="DD/MM/AAAA" />
+        <mat-datepicker-toggle matSuffix [for]="pickerTermino" />
+        <mat-datepicker #pickerTermino />
+        @if (form.get('dataTermino')?.hasError('required') && form.get('dataTermino')?.touched) {
+          <mat-error>Obrigatório</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Valor e Dia Vencimento -->
+    <div class="two-cols">
+      <mat-form-field appearance="outline">
+        <mat-label>Valor do Aluguel</mat-label>
+        <span matTextPrefix>R$&nbsp;</span>
+        <input matInput type="number" formControlName="valorAluguel" placeholder="0,00" min="0.01" />
+        @if (form.get('valorAluguel')?.hasError('required') && form.get('valorAluguel')?.touched) {
+          <mat-error>Obrigatório</mat-error>
+        } @else if (form.get('valorAluguel')?.hasError('min') && form.get('valorAluguel')?.touched) {
+          <mat-error>Valor inválido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Dia de Vencimento</mat-label>
+        <mat-select formControlName="diaVencimento">
+          @for (dia of diasVencimento; track dia) {
+            <mat-option [value]="dia">Dia {{ dia }}</mat-option>
+          }
+        </mat-select>
+        @if (form.get('diaVencimento')?.hasError('required') && form.get('diaVencimento')?.touched) {
+          <mat-error>Obrigatório</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- Observações -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Observações (opcional)</mat-label>
+      <textarea matInput formControlName="observacoes" rows="3" maxlength="500"
+                placeholder="Ex: Reajuste anual pelo IGPM..."></textarea>
+      <mat-hint align="end">{{ (form.get('observacoes')?.value?.length ?? 0) }}/500</mat-hint>
+    </mat-form-field>
+
+    <!-- Erro geral -->
+    @if (erro) {
+      <div class="erro-banner">
+        <mat-icon>error_outline</mat-icon>
+        <div>
+          <span>{{ erro }}</span>
+          @for (campo of errosCampos; track campo) {
+            <div class="erro-campo">• {{ campo }}</div>
+          }
+        </div>
+      </div>
+    }
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()" [disabled]="loading">Cancelar</button>
+  <button mat-flat-button color="primary"
+          (click)="salvar()"
+          [disabled]="form.invalid || loading">
+    @if (loading) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Criar Contrato
+    }
+  </button>
+</mat-dialog-actions>

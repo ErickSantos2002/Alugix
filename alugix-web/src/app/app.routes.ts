@@ -40,6 +40,11 @@ export const routes: Routes = [
           import('./features/contratos/contratos-list/contratos-list.component').then((m) => m.ContratosListComponent),
       },
       {
+        path: 'contratos/:id',
+        loadComponent: () =>
+          import('./features/contratos/contrato-detalhe/contrato-detalhe.component').then((m) => m.ContratoDetalheComponent),
+      },
+      {
         path: 'pagamentos',
         loadComponent: () =>
           import('./features/pagamentos/pagamentos-list/pagamentos-list.component').then((m) => m.PagamentosListComponent),

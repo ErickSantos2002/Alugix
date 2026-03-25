@@ -45,12 +45,14 @@ public class ContratoService {
     private final UsuarioRepository usuarioRepository;
     private final ContratoMapper contratoMapper;
 
+    @Transactional(readOnly = true)
     public Page<ContratoResponseDTO> listar(StatusContrato status, Pageable pageable) {
         Long usuarioId = getUsuarioIdAutenticado();
         return contratoRepository.findByUsuarioIdAndFiltros(usuarioId, status, pageable)
                 .map(contratoMapper::toResponse);
     }
 
+    @Transactional(readOnly = true)
     public ContratoResponseDTO buscarPorId(Long id) {
         Long usuarioId = getUsuarioIdAutenticado();
         return contratoMapper.toResponse(buscarContratoDoUsuario(id, usuarioId));

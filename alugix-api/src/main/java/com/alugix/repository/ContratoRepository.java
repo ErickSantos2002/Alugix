@@ -12,11 +12,20 @@ import java.util.Optional;
 
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 
-    @Query("""
-            SELECT c FROM Contrato c
-            WHERE c.usuario.id = :usuarioId
-              AND (:status IS NULL OR c.status = :status)
-            """)
+    @Query(
+        value = """
+                SELECT c FROM Contrato c
+                JOIN FETCH c.imovel
+                JOIN FETCH c.inquilino
+                WHERE c.usuario.id = :usuarioId
+                  AND (:status IS NULL OR c.status = :status)
+                """,
+        countQuery = """
+                SELECT COUNT(c) FROM Contrato c
+                WHERE c.usuario.id = :usuarioId
+                  AND (:status IS NULL OR c.status = :status)
+                """
+    )
     Page<Contrato> findByUsuarioIdAndFiltros(
             @Param("usuarioId") Long usuarioId,
             @Param("status") StatusContrato status,
