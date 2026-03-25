@@ -11,12 +11,23 @@
     </button>
   </div>
 
-  <!-- Busca -->
-  <mat-form-field appearance="outline" class="busca-field">
-    <mat-label>Buscar por nome ou CPF</mat-label>
-    <input matInput [formControl]="filtroBusca" placeholder="Digite para buscar..." />
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+  <!-- Filtros -->
+  <div class="filtros-container">
+    <mat-form-field appearance="outline" class="busca-field">
+      <mat-label>Buscar por nome ou CPF</mat-label>
+      <input matInput [formControl]="filtroBusca" placeholder="Digite para buscar..." />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filtro-field">
+      <mat-label>Situação</mat-label>
+      <mat-select [formControl]="filtroAtivo">
+        <mat-option value="true">Ativo</mat-option>
+        <mat-option value="false">Desativado</mat-option>
+        <mat-option value="">Todos</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <!-- Tabela -->
   <div class="table-container mat-elevation-z1">
@@ -59,6 +70,20 @@
       <ng-container matColumnDef="rendaMensal">
         <th mat-header-cell *matHeaderCellDef>Renda Mensal</th>
         <td mat-cell *matCellDef="let row">{{ formatarRenda(row.rendaMensal) }}</td>
+      </ng-container>
+
+      <!-- Ativo -->
+      <ng-container matColumnDef="ativo">
+        <th mat-header-cell *matHeaderCellDef>Ativo</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button
+                  [matTooltip]="row.ativo ? 'Desativar' : 'Ativar'"
+                  (click)="alternarAtivo(row)">
+            <mat-icon [style.color]="row.ativo ? '#2E7D32' : '#C62828'">
+              {{ row.ativo ? 'toggle_on' : 'toggle_off' }}
+            </mat-icon>
+          </button>
+        </td>
       </ng-container>
 
       <!-- Ações -->

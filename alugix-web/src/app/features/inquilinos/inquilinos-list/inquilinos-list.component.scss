@@ -23,8 +23,30 @@
   }
 }
 
+.filtros-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
 .busca-field {
   width: 360px;
+}
+
+.filtro-field {
+  width: 180px;
+}
+
+.mat-column-ativo {
+  width: 80px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
 }
 
 .table-container {

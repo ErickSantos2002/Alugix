@@ -13,6 +13,7 @@ export interface InquilinoResponse {
   telefone: string;
   email?: string;
   rendaMensal?: number;
+  ativo: boolean;
   status: string;
   createdAt: string;
 }

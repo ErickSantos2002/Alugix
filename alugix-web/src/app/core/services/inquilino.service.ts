@@ -9,13 +9,14 @@ export class InquilinoService {
   private readonly http = inject(HttpClient);
   private readonly BASE = '/api/v1/inquilinos';
 
-  listar(page = 0, size = 10, busca?: string): Observable<PageResponse<InquilinoResponse>> {
+  listar(page = 0, size = 10, busca?: string, ativo?: boolean): Observable<PageResponse<InquilinoResponse>> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size)
       .set('sort', 'nome,asc');
 
     if (busca) params = params.set('busca', busca);
+    if (ativo !== undefined) params = params.set('ativo', String(ativo));
 
     return this.http.get<PageResponse<InquilinoResponse>>(this.BASE, { params });
   }
@@ -34,5 +35,9 @@ export class InquilinoService {
 
   excluir(id: number): Observable<void> {
     return this.http.delete<void>(`${this.BASE}/${id}`);
+  }
+
+  alternarAtivo(id: number): Observable<InquilinoResponse> {
+    return this.http.patch<InquilinoResponse>(`${this.BASE}/${id}/ativo`, {});
   }
 }
