@@ -50,3 +50,19 @@
     }
   }
 }
+
+:host-context(.dark-theme) {
+  .header-toolbar {
+    background-color: #1E1E1E;
+    border-bottom-color: rgba(255,255,255,0.08);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+
+    .theme-btn { color: #B0BEC5; }
+
+    .user-btn {
+      color: #E0E0E0;
+      mat-icon { color: #90CAF9; }
+      .arrow-icon { color: #9E9E9E; }
+    }
+  }
+}

@@ -17,6 +17,19 @@ $alugix-theme: mat.m2-define-light-theme((
 
 @include mat.all-component-themes($alugix-theme);
 
+// Tema escuro do Angular Material
+$alugix-dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $alugix-primary,
+    accent: $alugix-accent,
+    warn: $alugix-warn,
+  ),
+));
+
+.dark-theme {
+  @include mat.all-component-colors($alugix-dark-theme);
+}
+
 // Reset e globals
 * {
   box-sizing: border-box;

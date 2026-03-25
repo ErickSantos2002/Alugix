@@ -110,3 +110,28 @@ th.mat-header-cell {
     font-size: 16px;
   }
 }
+
+// ── Dark mode ──────────────────────────────────────────────
+:host-context(.dark-theme) {
+  .page-title    { color: #90CAF9; }
+  .page-subtitle { color: #9E9E9E; }
+
+  .table-container { background: #1E1E1E; }
+
+  .loading-overlay { background: rgba(0,0,0,0.6); }
+
+  .inquilino-nome { color: #E0E0E0; }
+  .email-cell     { color: #9E9E9E; }
+
+  .table-row:hover { background-color: #2A2A2A; }
+
+  th.mat-header-cell {
+    background-color: #252525;
+    color: #9E9E9E;
+  }
+
+  .empty-state {
+    color: #616161;
+    mat-icon { color: #424242; }
+  }
+}

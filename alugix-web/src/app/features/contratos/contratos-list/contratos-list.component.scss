@@ -147,3 +147,35 @@ th.mat-header-cell {
 .mat-column-valorAluguel {
   width: 130px;
 }
+
+// ── Dark mode ──────────────────────────────────────────────
+:host-context(.dark-theme) {
+  .page-title    { color: #90CAF9; }
+  .page-subtitle { color: #9E9E9E; }
+
+  .table-container { background: #1E1E1E; }
+
+  .loading-overlay { background: rgba(0,0,0,0.6); }
+
+  .imovel-nome    { color: #E0E0E0; }
+  .imovel-endereco { color: #757575; }
+  .periodo-cell   { color: #9E9E9E; }
+
+  .table-row:hover { background-color: #2A2A2A; }
+
+  th.mat-header-cell {
+    background-color: #252525;
+    color: #9E9E9E;
+  }
+
+  .status-badge {
+    &.status-ativo     { background-color: #1B3A1F; color: #A5D6A7; }
+    &.status-atrasado  { background-color: #3E0000; color: #EF9A9A; }
+    &.status-encerrado { background-color: #1A1A1A; color: #757575; }
+  }
+
+  .empty-state {
+    color: #616161;
+    mat-icon { color: #424242; }
+  }
+}

@@ -190,3 +190,50 @@
     font-size: 14px;
   }
 }
+
+// ── Dark mode ──────────────────────────────────────────────
+:host-context(.dark-theme) {
+  .page-title    { color: #90CAF9; }
+  .page-subtitle { color: #9E9E9E; }
+
+  .status-badge {
+    &.status-ativo     { background-color: #1B3A1F; color: #A5D6A7; }
+    &.status-atrasado  { background-color: #3E0000; color: #EF9A9A; }
+    &.status-encerrado { background-color: #1A1A1A; color: #757575; }
+  }
+
+  .info-card {
+    background: #1E1E1E;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .info-card-header {
+    background-color: #252525;
+    border-bottom-color: rgba(255,255,255,0.08);
+    color: #90CAF9;
+    mat-icon { color: #90CAF9; }
+  }
+
+  .info-label  { color: #757575; }
+  .info-value  { color: #E0E0E0; }
+  .valor-destaque { color: #90CAF9; }
+
+  .observacoes-text { color: #B0BEC5; }
+
+  .pagamentos-section {
+    background: #1E1E1E;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .section-header {
+    background-color: #252525;
+    border-bottom-color: rgba(255,255,255,0.08);
+    h2 { color: #90CAF9; }
+    mat-icon { color: #90CAF9; }
+  }
+
+  .pagamentos-placeholder {
+    color: #424242;
+    mat-icon { color: #333; }
+  }
+}

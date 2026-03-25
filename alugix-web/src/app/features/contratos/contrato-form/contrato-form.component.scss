@@ -48,3 +48,16 @@ mat-dialog-actions {
   padding: 8px 24px 20px !important;
   gap: 8px;
 }
+
+// ── Dark mode ──────────────────────────────────────────────
+:host-context(.dark-theme) {
+  h2[mat-dialog-title] {
+    color: #90CAF9;
+    mat-icon { color: #90CAF9; }
+  }
+
+  .erro-banner {
+    background-color: #3E0000;
+    color: #EF9A9A;
+  }
+}

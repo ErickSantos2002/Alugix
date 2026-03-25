@@ -18,6 +18,11 @@
   overflow: hidden;
 }
 
+:host-context(.dark-theme) {
+  .sidenav-content { background-color: #121212; }
+  .main-content { background-color: #121212; }
+}
+
 .main-content {
   flex: 1;
   padding: 24px;
