@@ -106,7 +106,7 @@
           <mat-icon>receipt_long</mat-icon>
           <h2>Pagamentos</h2>
         </div>
-        <mat-select [(ngModel)]="filtroPagamento" class="filtro-select">
+        <mat-select [value]="filtroPagamento()" (valueChange)="filtroPagamento.set($event)" class="filtro-select">
           @for (op of statusOpcoes; track op.value) {
             <mat-option [value]="op.value">{{ op.label }}</mat-option>
           }

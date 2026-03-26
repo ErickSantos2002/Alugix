@@ -23,7 +23,6 @@ export class SidebarComponent {
     { label: 'Imóveis',    icon: 'home',         route: '/imoveis' },
     { label: 'Inquilinos', icon: 'people',       route: '/inquilinos' },
     { label: 'Contratos',  icon: 'description',  route: '/contratos' },
-    { label: 'Pagamentos', icon: 'payments',     route: '/pagamentos' },
   ];
 
   isAdmin(): boolean {

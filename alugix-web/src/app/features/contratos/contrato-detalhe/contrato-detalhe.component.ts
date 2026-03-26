@@ -8,7 +8,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FormsModule } from '@angular/forms';
 
 import { ContratoService } from '../../../core/services/contrato.service';
 import { PagamentoService } from '../../../core/services/pagamento.service';
@@ -25,7 +24,7 @@ const STATUS_CONTRATO_LABEL: Record<StatusContrato, string> = {
   selector: 'app-contrato-detalhe',
   standalone: true,
   imports: [
-    FormsModule, TitleCasePipe,
+    TitleCasePipe,
     MatButtonModule, MatIconModule, MatProgressSpinnerModule,
     MatSnackBarModule, MatDialogModule, MatSelectModule, MatTooltipModule,
   ],
@@ -44,12 +43,13 @@ export class ContratoDetalheComponent implements OnInit {
   pagamentos = signal<PagamentoResponse[]>([]);
   loading = signal(true);
   loadingPagamentos = signal(false);
-  filtroPagamento = '';
+  filtroPagamento = signal<string>('');
 
   readonly pagamentosFiltrados = computed(() => {
     const lista = this.pagamentos();
-    if (!this.filtroPagamento) return lista;
-    return lista.filter(p => p.status === this.filtroPagamento);
+    const filtro = this.filtroPagamento();
+    if (!filtro) return lista;
+    return lista.filter(p => p.status === filtro);
   });
 
   readonly statusOpcoes = [
