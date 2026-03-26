@@ -31,11 +31,12 @@ public class ImovelController {
     @Operation(summary = "Listar imóveis", description = "Lista paginada com filtros opcionais de status e tipo")
     @ApiResponse(responseCode = "200", description = "Listagem realizada com sucesso")
     public ResponseEntity<Page<ImovelResponseDTO>> listar(
+            @RequestParam(required = false) Long usuarioId,
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) StatusImovel status,
             @RequestParam(required = false) TipoImovel tipo,
             Pageable pageable) {
-        return ResponseEntity.ok(imovelService.listar(ativo, status, tipo, pageable));
+        return ResponseEntity.ok(imovelService.listar(usuarioId, ativo, status, tipo, pageable));
     }
 
     @GetMapping("/{id}")

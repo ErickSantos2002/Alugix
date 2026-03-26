@@ -9,12 +9,12 @@ import com.alugix.exception.ResourceNotFoundException;
 import com.alugix.mapper.InquilinoMapper;
 import com.alugix.repository.InquilinoRepository;
 import com.alugix.repository.UsuarioRepository;
+import com.alugix.security.SecurityHelper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +27,10 @@ public class InquilinoService {
     private final InquilinoRepository inquilinoRepository;
     private final UsuarioRepository usuarioRepository;
     private final InquilinoMapper inquilinoMapper;
+    private final SecurityHelper securityHelper;
 
-    public Page<InquilinoResponseDTO> listar(Boolean ativo, String busca, Pageable pageable) {
-        Long usuarioId = getUsuarioIdAutenticado();
+    public Page<InquilinoResponseDTO> listar(Long targetUsuarioId, Boolean ativo, String busca, Pageable pageable) {
+        Long usuarioId = securityHelper.resolverUsuarioId(targetUsuarioId);
         Page<Inquilino> page = (busca == null || busca.isBlank())
                 ? inquilinoRepository.findByUsuarioIdAndFiltros(usuarioId, ativo, pageable)
                 : inquilinoRepository.findByUsuarioIdAndBusca(usuarioId, ativo, busca, pageable);
@@ -37,13 +38,13 @@ public class InquilinoService {
     }
 
     public InquilinoResponseDTO buscarPorId(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         return inquilinoMapper.toResponse(buscarInquilinoDoUsuario(id, usuarioId));
     }
 
     @Transactional
     public InquilinoResponseDTO criar(InquilinoRequestDTO dto) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         validarCpfUnico(dto.cpf(), usuarioId, null);
 
         Usuario usuario = usuarioRepository.findById(usuarioId)
@@ -61,7 +62,7 @@ public class InquilinoService {
 
     @Transactional
     public InquilinoResponseDTO atualizar(Long id, InquilinoRequestDTO dto) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Inquilino inquilino = buscarInquilinoDoUsuario(id, usuarioId);
         validarCpfUnico(dto.cpf(), usuarioId, id);
 
@@ -71,7 +72,7 @@ public class InquilinoService {
 
     @Transactional
     public InquilinoResponseDTO alternarAtivo(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Inquilino inquilino = inquilinoRepository.findByIdAndUsuarioId(id, usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Inquilino não encontrado"));
         inquilino.setAtivo(!inquilino.getAtivo());
@@ -81,7 +82,7 @@ public class InquilinoService {
 
     @Transactional
     public void deletar(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Inquilino inquilino = buscarInquilinoDoUsuario(id, usuarioId);
         inquilinoRepository.delete(inquilino);
         logger.info("Inquilino excluído: id={}, usuarioId={}", id, usuarioId);
@@ -99,12 +100,5 @@ public class InquilinoService {
     private Inquilino buscarInquilinoDoUsuario(Long id, Long usuarioId) {
         return inquilinoRepository.findByIdAndUsuarioIdAndAtivoTrue(id, usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Inquilino não encontrado"));
-    }
-
-    private Long getUsuarioIdAutenticado() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"))
-                .getId();
     }
 }

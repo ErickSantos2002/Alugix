@@ -30,4 +30,8 @@ public interface ImovelRepository extends JpaRepository<Imovel, Long> {
     Optional<Imovel> findByIdAndUsuarioIdAndAtivoTrue(Long id, Long usuarioId);
 
     Optional<Imovel> findByIdAndUsuarioId(Long id, Long usuarioId);
+
+    long countByUsuarioIdAndAtivoTrue(Long usuarioId);
+
+    long countByUsuarioIdAndAtivoTrueAndStatus(Long usuarioId, StatusImovel status);
 }
