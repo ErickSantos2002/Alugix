@@ -41,4 +41,6 @@ public interface InquilinoRepository extends JpaRepository<Inquilino, Long> {
     boolean existsByCpfAndUsuarioId(String cpf, Long usuarioId);
 
     boolean existsByCpfAndUsuarioIdAndIdNot(String cpf, Long usuarioId, Long id);
+
+    long countByUsuarioIdAndAtivoTrue(Long usuarioId);
 }
