@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>
+  <mat-icon>payments</mat-icon>
+  Registrar Pagamento
+</h2>
+
+<mat-dialog-content>
+  <!-- Resumo do pagamento -->
+  <div class="resumo-pagamento">
+    <div class="resumo-item">
+      <span class="resumo-label">Referência</span>
+      <span class="resumo-valor">{{ formatarMes(pagamento.mesReferencia) | titlecase }}</span>
+    </div>
+    <div class="resumo-item">
+      <span class="resumo-label">Vencimento</span>
+      <span class="resumo-valor">{{ formatarData(pagamento.dataVencimento) }}</span>
+    </div>
+    <div class="resumo-item">
+      <span class="resumo-label">Valor esperado</span>
+      <span class="resumo-valor valor-destaque">{{ formatarValor(valorAluguel) }}</span>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="form-grid">
+
+    <!-- Valor Pago -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Valor Pago</mat-label>
+      <span matTextPrefix>R$&nbsp;</span>
+      <input matInput type="number" formControlName="valorPago" placeholder="0,00" min="0.01" />
+      @if (form.get('valorPago')?.hasError('required') && form.get('valorPago')?.touched) {
+        <mat-error>Obrigatório</mat-error>
+      } @else if (form.get('valorPago')?.hasError('min') && form.get('valorPago')?.touched) {
+        <mat-error>Valor inválido</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Data do Pagamento -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Data do Pagamento</mat-label>
+      <input matInput appDateMask [matDatepicker]="pickerData"
+             formControlName="dataPagamento" placeholder="DD/MM/AAAA" />
+      <mat-datepicker-toggle matSuffix [for]="pickerData" />
+      <mat-datepicker #pickerData />
+      @if (form.get('dataPagamento')?.hasError('required') && form.get('dataPagamento')?.touched) {
+        <mat-error>Obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Forma de Pagamento -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Forma de Pagamento (opcional)</mat-label>
+      <mat-select formControlName="formaPagamento">
+        <mat-option [value]="null">Não informado</mat-option>
+        @for (op of formaOpcoes; track op.value) {
+          <mat-option [value]="op.value">{{ op.label }}</mat-option>
+        }
+      </mat-select>
+      <mat-icon matSuffix>account_balance_wallet</mat-icon>
+    </mat-form-field>
+
+    <!-- Observações -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Observações (opcional)</mat-label>
+      <textarea matInput formControlName="observacoes" rows="2"
+                maxlength="500" placeholder="Ex: Pago com desconto..."></textarea>
+      <mat-hint align="end">{{ (form.get('observacoes')?.value?.length ?? 0) }}/500</mat-hint>
+    </mat-form-field>
+
+    @if (erro) {
+      <div class="erro-banner">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ erro }}</span>
+      </div>
+    }
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()" [disabled]="loading">Cancelar</button>
+  <button mat-flat-button color="primary"
+          (click)="salvar()"
+          [disabled]="form.invalid || loading">
+    @if (loading) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Confirmar Pagamento
+    }
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,94 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #1B4F72;
+  margin: 0;
+  padding: 20px 24px 0;
+  mat-icon { color: #1B4F72; }
+}
+
+mat-dialog-content {
+  padding: 16px 24px !important;
+  min-width: 420px;
+  max-width: 480px;
+}
+
+.resumo-pagamento {
+  display: flex;
+  gap: 24px;
+  padding: 12px 16px;
+  background-color: #F5F8FA;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.resumo-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resumo-label {
+  font-size: 11px;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resumo-valor {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+}
+
+.valor-destaque {
+  color: #1B4F72;
+  font-size: 16px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.full-width { width: 100%; }
+
+.erro-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background-color: #FFEBEE;
+  border-radius: 6px;
+  color: #C62828;
+  font-size: 14px;
+  mat-icon { font-size: 20px; width: 20px; height: 20px; flex-shrink: 0; }
+}
+
+mat-dialog-actions {
+  padding: 8px 24px 20px !important;
+  gap: 8px;
+}
+
+// ── Dark mode ──────────────────────────────────────────────
+:host-context(.dark-theme) {
+  h2[mat-dialog-title] {
+    color: #90CAF9;
+    mat-icon { color: #90CAF9; }
+  }
+
+  .resumo-pagamento { background-color: #252525; }
+  .resumo-label     { color: #757575; }
+  .resumo-valor     { color: #E0E0E0; }
+  .valor-destaque   { color: #90CAF9; }
+
+  .erro-banner {
+    background-color: #3E0000;
+    color: #EF9A9A;
+  }
+}

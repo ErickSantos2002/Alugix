@@ -1,9 +1,7 @@
 <div class="page-container">
 
   @if (loading()) {
-    <div class="loading-center">
-      <mat-spinner diameter="48" />
-    </div>
+    <div class="loading-center"><mat-spinner diameter="48" /></div>
   }
 
   @if (!loading() && contrato(); as c) {
@@ -21,7 +19,7 @@
       </div>
       <div class="header-actions">
         <span class="status-badge" [class]="'status-' + c.status.toLowerCase()">
-          {{ getStatusLabel(c.status) }}
+          {{ getStatusContratoLabel(c.status) }}
         </span>
         @if (c.status === 'ATIVO' || c.status === 'ATRASADO') {
           <button mat-stroked-button color="warn" (click)="encerrarContrato()">
@@ -35,12 +33,8 @@
     <!-- Cards de informação -->
     <div class="info-grid">
 
-      <!-- Imóvel -->
       <div class="info-card">
-        <div class="info-card-header">
-          <mat-icon>home</mat-icon>
-          <span>Imóvel</span>
-        </div>
+        <div class="info-card-header"><mat-icon>home</mat-icon><span>Imóvel</span></div>
         <div class="info-card-body">
           <div class="info-row">
             <span class="info-label">Nome</span>
@@ -57,12 +51,8 @@
         </div>
       </div>
 
-      <!-- Inquilino -->
       <div class="info-card">
-        <div class="info-card-header">
-          <mat-icon>person</mat-icon>
-          <span>Inquilino</span>
-        </div>
+        <div class="info-card-header"><mat-icon>person</mat-icon><span>Inquilino</span></div>
         <div class="info-card-body">
           <div class="info-row">
             <span class="info-label">Nome</span>
@@ -75,19 +65,15 @@
         </div>
       </div>
 
-      <!-- Valores e Datas -->
       <div class="info-card">
-        <div class="info-card-header">
-          <mat-icon>payments</mat-icon>
-          <span>Valores e Período</span>
-        </div>
+        <div class="info-card-header"><mat-icon>payments</mat-icon><span>Valores e Período</span></div>
         <div class="info-card-body">
           <div class="info-row">
             <span class="info-label">Valor Mensal</span>
             <span class="info-value valor-destaque">{{ formatarValor(c.valorAluguel) }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">Dia de Vencimento</span>
+            <span class="info-label">Vencimento</span>
             <span class="info-value">Dia {{ c.diaVencimento }}</span>
           </div>
           <div class="info-row">
@@ -102,12 +88,8 @@
       </div>
 
       @if (c.observacoes) {
-        <!-- Observações -->
         <div class="info-card info-card-full">
-          <div class="info-card-header">
-            <mat-icon>notes</mat-icon>
-            <span>Observações</span>
-          </div>
+          <div class="info-card-header"><mat-icon>notes</mat-icon><span>Observações</span></div>
           <div class="info-card-body">
             <p class="observacoes-text">{{ c.observacoes }}</p>
           </div>
@@ -116,16 +98,75 @@
 
     </div>
 
-    <!-- Pagamentos (placeholder Sprint 5) -->
+    <!-- Pagamentos -->
     <div class="pagamentos-section">
+
       <div class="section-header">
-        <mat-icon>receipt_long</mat-icon>
-        <h2>Histórico de Pagamentos</h2>
+        <div class="section-header-left">
+          <mat-icon>receipt_long</mat-icon>
+          <h2>Pagamentos</h2>
+        </div>
+        <mat-select [(ngModel)]="filtroPagamento" class="filtro-select">
+          @for (op of statusOpcoes; track op.value) {
+            <mat-option [value]="op.value">{{ op.label }}</mat-option>
+          }
+        </mat-select>
       </div>
-      <div class="pagamentos-placeholder">
-        <mat-icon>hourglass_empty</mat-icon>
-        <p>Os pagamentos serão exibidos aqui após a Sprint 5.</p>
-      </div>
+
+      @if (loadingPagamentos()) {
+        <div class="pagamentos-loading"><mat-spinner diameter="36" /></div>
+      } @else if (pagamentosFiltrados().length === 0) {
+        <div class="pagamentos-vazio">
+          <mat-icon>check_circle</mat-icon>
+          <p>Nenhum pagamento encontrado</p>
+        </div>
+      } @else {
+        <div class="pagamentos-grid">
+          @for (p of pagamentosFiltrados(); track p.id) {
+            <div class="pagamento-card" [class]="'card-' + p.status.toLowerCase()">
+              <div class="pagamento-mes">{{ formatarMes(p.mesReferencia) | titlecase }}</div>
+
+              <div class="pagamento-info">
+                <div class="pagamento-info-row">
+                  <span class="info-label">Vencimento</span>
+                  <span>{{ formatarData(p.dataVencimento) }}</span>
+                </div>
+                @if (p.dataPagamento) {
+                  <div class="pagamento-info-row">
+                    <span class="info-label">Pago em</span>
+                    <span>{{ formatarData(p.dataPagamento) }}</span>
+                  </div>
+                }
+                @if (p.formaPagamento) {
+                  <div class="pagamento-info-row">
+                    <span class="info-label">Forma</span>
+                    <span>{{ p.formaPagamento }}</span>
+                  </div>
+                }
+              </div>
+
+              <div class="pagamento-footer">
+                <div>
+                  <div class="pagamento-valor">
+                    {{ formatarValor(p.status === 'PAGO' ? p.valorPago : c.valorAluguel) }}
+                  </div>
+                  <span class="status-pag-badge" [class]="'spb-' + p.status.toLowerCase()">
+                    {{ getStatusPagamentoLabel(p.status) }}
+                  </span>
+                </div>
+                @if (p.status !== 'PAGO') {
+                  <button mat-flat-button color="primary" class="btn-pagar"
+                          (click)="registrarPagamento(p)">
+                    <mat-icon>check</mat-icon>
+                    Pagar
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+
     </div>
 
   }

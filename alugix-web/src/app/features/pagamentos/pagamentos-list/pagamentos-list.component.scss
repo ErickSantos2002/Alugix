@@ -1,0 +1,60 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  .page-title {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+    color: #1B4F72;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin: 4px 0 0;
+  }
+}
+
+.info-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+
+  mat-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    color: #B0BEC5;
+  }
+
+  h2 { margin: 0; font-size: 20px; font-weight: 500; color: #1B4F72; }
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 15px;
+    max-width: 420px;
+    line-height: 1.6;
+  }
+}
+
+:host-context(.dark-theme) {
+  .page-title    { color: #90CAF9; }
+  .page-subtitle { color: #9E9E9E; }
+
+  .info-card {
+    background: #1E1E1E;
+    mat-icon { color: #424242; }
+    h2 { color: #90CAF9; }
+    p  { color: #9E9E9E; }
+  }
+}
