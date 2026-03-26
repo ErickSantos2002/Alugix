@@ -18,12 +18,12 @@ import com.alugix.repository.ImovelRepository;
 import com.alugix.repository.InquilinoRepository;
 import com.alugix.repository.PagamentoRepository;
 import com.alugix.repository.UsuarioRepository;
+import com.alugix.security.SecurityHelper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,23 +44,24 @@ public class ContratoService {
     private final PagamentoRepository pagamentoRepository;
     private final UsuarioRepository usuarioRepository;
     private final ContratoMapper contratoMapper;
+    private final SecurityHelper securityHelper;
 
     @Transactional(readOnly = true)
-    public Page<ContratoResponseDTO> listar(StatusContrato status, Pageable pageable) {
-        Long usuarioId = getUsuarioIdAutenticado();
+    public Page<ContratoResponseDTO> listar(Long targetUsuarioId, StatusContrato status, Pageable pageable) {
+        Long usuarioId = securityHelper.resolverUsuarioId(targetUsuarioId);
         return contratoRepository.findByUsuarioIdAndFiltros(usuarioId, status, pageable)
                 .map(contratoMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
     public ContratoResponseDTO buscarPorId(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         return contratoMapper.toResponse(buscarContratoDoUsuario(id, usuarioId));
     }
 
     @Transactional
     public ContratoResponseDTO criar(ContratoRequestDTO dto) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
@@ -96,7 +97,7 @@ public class ContratoService {
 
     @Transactional
     public ContratoResponseDTO encerrar(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Contrato contrato = buscarContratoDoUsuario(id, usuarioId);
 
         if (contrato.getStatus() == StatusContrato.ENCERRADO) {
@@ -152,10 +153,4 @@ public class ContratoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Contrato não encontrado"));
     }
 
-    private Long getUsuarioIdAutenticado() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"))
-                .getId();
-    }
 }

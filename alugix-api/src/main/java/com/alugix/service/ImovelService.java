@@ -12,12 +12,12 @@ import com.alugix.exception.ResourceNotFoundException;
 import com.alugix.mapper.ImovelMapper;
 import com.alugix.repository.ImovelRepository;
 import com.alugix.repository.UsuarioRepository;
+import com.alugix.security.SecurityHelper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,21 +30,22 @@ public class ImovelService {
     private final ImovelRepository imovelRepository;
     private final UsuarioRepository usuarioRepository;
     private final ImovelMapper imovelMapper;
+    private final SecurityHelper securityHelper;
 
-    public Page<ImovelResponseDTO> listar(Boolean ativo, StatusImovel status, TipoImovel tipo, Pageable pageable) {
-        Long usuarioId = getUsuarioIdAutenticado();
+    public Page<ImovelResponseDTO> listar(Long targetUsuarioId, Boolean ativo, StatusImovel status, TipoImovel tipo, Pageable pageable) {
+        Long usuarioId = securityHelper.resolverUsuarioId(targetUsuarioId);
         return imovelRepository.findByUsuarioIdAndFiltros(usuarioId, ativo, status, tipo, pageable)
                 .map(imovelMapper::toResponse);
     }
 
     public ImovelResponseDTO buscarPorId(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         return imovelMapper.toResponse(buscarImovelDoUsuario(id, usuarioId));
     }
 
     @Transactional
     public ImovelResponseDTO criar(ImovelRequestDTO dto) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
@@ -60,7 +61,7 @@ public class ImovelService {
 
     @Transactional
     public ImovelResponseDTO atualizar(Long id, ImovelRequestDTO dto) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
         if (dto.status() != null) {
             if (imovel.getStatus() == StatusImovel.ALUGADO) {
@@ -76,7 +77,7 @@ public class ImovelService {
 
     @Transactional
     public ImovelResponseDTO alternarAtivo(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Imovel imovel = imovelRepository.findByIdAndUsuarioId(id, usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Imóvel não encontrado"));
         imovel.setAtivo(!imovel.getAtivo());
@@ -86,7 +87,7 @@ public class ImovelService {
 
     @Transactional
     public ImovelResponseDTO atualizarStatus(Long id, ImovelStatusRequestDTO dto) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
 
         if (imovel.getStatus() == StatusImovel.ALUGADO) {
@@ -103,7 +104,7 @@ public class ImovelService {
 
     @Transactional
     public void deletar(Long id) {
-        Long usuarioId = getUsuarioIdAutenticado();
+        Long usuarioId = securityHelper.resolverUsuarioId(null);
         Imovel imovel = buscarImovelDoUsuario(id, usuarioId);
         imovelRepository.delete(imovel);
         logger.info("Imóvel excluído: id={}, usuarioId={}", id, usuarioId);
@@ -112,12 +113,5 @@ public class ImovelService {
     private Imovel buscarImovelDoUsuario(Long id, Long usuarioId) {
         return imovelRepository.findByIdAndUsuarioIdAndAtivoTrue(id, usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Imóvel não encontrado"));
-    }
-
-    private Long getUsuarioIdAutenticado() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"))
-                .getId();
     }
 }

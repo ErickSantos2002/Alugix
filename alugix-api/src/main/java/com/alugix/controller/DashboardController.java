@@ -26,31 +26,32 @@ public class DashboardController {
     private final DashboardService dashboardService;
 
     @GetMapping("/resumo")
-    @Operation(summary = "Resumo geral", description = "Totais de imóveis por status, inquilinos, contratos e inadimplência")
+    @Operation(summary = "Resumo geral", description = "Totais de imóveis por status, inquilinos, contratos e inadimplência. Admin pode passar ?usuarioId= para ver dados de outro usuário.")
     @ApiResponse(responseCode = "200", description = "Resumo gerado com sucesso")
-    public ResponseEntity<DashboardResumoDTO> resumo() {
-        return ResponseEntity.ok(dashboardService.resumo());
+    public ResponseEntity<DashboardResumoDTO> resumo(@RequestParam(required = false) Long usuarioId) {
+        return ResponseEntity.ok(dashboardService.resumo(usuarioId));
     }
 
     @GetMapping("/receita")
-    @Operation(summary = "Receita do mês", description = "Receita prevista vs realizada no mês atual com contagem de pagamentos por status")
+    @Operation(summary = "Receita do mês", description = "Receita prevista vs realizada no mês atual. Admin pode passar ?usuarioId=.")
     @ApiResponse(responseCode = "200", description = "Dados de receita gerados com sucesso")
-    public ResponseEntity<DashboardReceitaDTO> receita() {
-        return ResponseEntity.ok(dashboardService.receita());
+    public ResponseEntity<DashboardReceitaDTO> receita(@RequestParam(required = false) Long usuarioId) {
+        return ResponseEntity.ok(dashboardService.receita(usuarioId));
     }
 
     @GetMapping("/inadimplencia")
-    @Operation(summary = "Inadimplência", description = "Lista de pagamentos atrasados com inquilino, imóvel e dias em atraso")
+    @Operation(summary = "Inadimplência", description = "Lista de pagamentos atrasados. Admin pode passar ?usuarioId=.")
     @ApiResponse(responseCode = "200", description = "Dados de inadimplência gerados com sucesso")
-    public ResponseEntity<DashboardInadimplenciaDTO> inadimplencia() {
-        return ResponseEntity.ok(dashboardService.inadimplencia());
+    public ResponseEntity<DashboardInadimplenciaDTO> inadimplencia(@RequestParam(required = false) Long usuarioId) {
+        return ResponseEntity.ok(dashboardService.inadimplencia(usuarioId));
     }
 
     @GetMapping("/contratos-vencer")
-    @Operation(summary = "Contratos a vencer", description = "Contratos ativos que vencem nos próximos N dias (padrão: 30)")
+    @Operation(summary = "Contratos a vencer", description = "Contratos ativos que vencem nos próximos N dias (padrão: 30). Admin pode passar ?usuarioId=.")
     @ApiResponse(responseCode = "200", description = "Lista gerada com sucesso")
     public ResponseEntity<DashboardContratosVencerDTO> contratosVencer(
+            @RequestParam(required = false) Long usuarioId,
             @RequestParam(defaultValue = "30") int dias) {
-        return ResponseEntity.ok(dashboardService.contratosVencer(dias));
+        return ResponseEntity.ok(dashboardService.contratosVencer(usuarioId, dias));
     }
 }

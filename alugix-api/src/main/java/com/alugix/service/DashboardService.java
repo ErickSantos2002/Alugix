@@ -15,8 +15,8 @@ import com.alugix.repository.ImovelRepository;
 import com.alugix.repository.InquilinoRepository;
 import com.alugix.repository.PagamentoRepository;
 import com.alugix.repository.UsuarioRepository;
+import com.alugix.security.SecurityHelper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +33,11 @@ public class DashboardService {
     private final ContratoRepository contratoRepository;
     private final PagamentoRepository pagamentoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final SecurityHelper securityHelper;
 
     @Transactional(readOnly = true)
-    public DashboardResumoDTO resumo() {
-        Long usuarioId = getUsuarioIdAutenticado();
+    public DashboardResumoDTO resumo(Long targetUsuarioId) {
+        Long usuarioId = securityHelper.resolverUsuarioId(targetUsuarioId);
         return new DashboardResumoDTO(
                 imovelRepository.countByUsuarioIdAndAtivoTrue(usuarioId),
                 imovelRepository.countByUsuarioIdAndAtivoTrueAndStatus(usuarioId, StatusImovel.DISPONIVEL),
@@ -49,8 +50,8 @@ public class DashboardService {
     }
 
     @Transactional(readOnly = true)
-    public DashboardReceitaDTO receita() {
-        Long usuarioId = getUsuarioIdAutenticado();
+    public DashboardReceitaDTO receita(Long targetUsuarioId) {
+        Long usuarioId = securityHelper.resolverUsuarioId(targetUsuarioId);
         LocalDate hoje = LocalDate.now();
 
         return new DashboardReceitaDTO(
@@ -65,8 +66,8 @@ public class DashboardService {
     }
 
     @Transactional(readOnly = true)
-    public DashboardInadimplenciaDTO inadimplencia() {
-        Long usuarioId = getUsuarioIdAutenticado();
+    public DashboardInadimplenciaDTO inadimplencia(Long targetUsuarioId) {
+        Long usuarioId = securityHelper.resolverUsuarioId(targetUsuarioId);
         List<Pagamento> atrasados = pagamentoRepository.findAtrasadosByUsuarioId(usuarioId);
 
         var valorTotal = atrasados.stream()
@@ -88,8 +89,8 @@ public class DashboardService {
     }
 
     @Transactional(readOnly = true)
-    public DashboardContratosVencerDTO contratosVencer(int dias) {
-        Long usuarioId = getUsuarioIdAutenticado();
+    public DashboardContratosVencerDTO contratosVencer(Long targetUsuarioId, int dias) {
+        Long usuarioId = securityHelper.resolverUsuarioId(targetUsuarioId);
         LocalDate hoje = LocalDate.now();
         List<Contrato> contratos = contratoRepository.findContratosVencer(usuarioId, hoje, hoje.plusDays(dias));
 
@@ -105,10 +106,4 @@ public class DashboardService {
         return new DashboardContratosVencerDTO(contratos.size(), lista);
     }
 
-    private Long getUsuarioIdAutenticado() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"))
-                .getId();
-    }
 }

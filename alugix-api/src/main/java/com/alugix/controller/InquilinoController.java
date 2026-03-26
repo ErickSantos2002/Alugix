@@ -28,10 +28,11 @@ public class InquilinoController {
     @Operation(summary = "Listar inquilinos", description = "Lista paginada com busca opcional por nome ou CPF")
     @ApiResponse(responseCode = "200", description = "Listagem realizada com sucesso")
     public ResponseEntity<Page<InquilinoResponseDTO>> listar(
+            @RequestParam(required = false) Long usuarioId,
             @RequestParam(required = false) Boolean ativo,
             @RequestParam(required = false) String busca,
             Pageable pageable) {
-        return ResponseEntity.ok(inquilinoService.listar(ativo, busca, pageable));
+        return ResponseEntity.ok(inquilinoService.listar(usuarioId, ativo, busca, pageable));
     }
 
     @GetMapping("/{id}")

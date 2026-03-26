@@ -29,9 +29,10 @@ public class ContratoController {
     @Operation(summary = "Listar contratos", description = "Lista paginada com filtro opcional por status")
     @ApiResponse(responseCode = "200", description = "Listagem realizada com sucesso")
     public ResponseEntity<Page<ContratoResponseDTO>> listar(
+            @RequestParam(required = false) Long usuarioId,
             @RequestParam(required = false) StatusContrato status,
             Pageable pageable) {
-        return ResponseEntity.ok(contratoService.listar(status, pageable));
+        return ResponseEntity.ok(contratoService.listar(usuarioId, status, pageable));
     }
 
     @GetMapping("/{id}")
