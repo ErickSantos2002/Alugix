@@ -1,0 +1,25 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  mat-icon { color: #1a5276; }
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 420px;
+  padding-top: 8px !important;
+}
+
+.full-width { width: 100%; }
+
+mat-dialog-actions {
+  padding: 8px 24px 16px !important;
+  gap: 8px;
+}
+
+:host-context(.dark-theme) {
+  h2 mat-icon { color: #90caf9; }
+}

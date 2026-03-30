@@ -1,0 +1,131 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+    color: #1B4F72;
+
+    mat-icon { font-size: 28px; width: 28px; height: 28px; }
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: #777;
+    margin: 4px 0 0 36px;
+  }
+}
+
+.filtros-container {
+  display: flex;
+  gap: 12px;
+}
+
+.filtro-field { width: 180px; }
+
+.table-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+table { width: 100%; }
+
+th.mat-header-cell {
+  font-weight: 600;
+  color: #444;
+  font-size: 13px;
+  padding: 12px 16px;
+}
+
+td.mat-cell { padding: 12px 16px; }
+
+.usuario-info { display: flex; flex-direction: column; }
+.usuario-nome { font-weight: 500; font-size: 0.9rem; }
+
+/* Badge perfil */
+.badge-perfil {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: #e8f4fd;
+  color: #1a5276;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+
+  &.admin { background: #f4ecf7; color: #6c3483; }
+}
+
+/* Badge situação */
+.badge-situacao {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  &.ativo   { background: #d5f5e3; color: #1e8449; }
+  &.inativo { background: #fadbd8; color: #c0392b; }
+}
+
+/* Ações */
+.acoes {
+  display: flex;
+  gap: 2px;
+
+  .btn-desativar mat-icon { color: #e67e22; }
+  .btn-reativar mat-icon  { color: #27ae60; }
+  .btn-excluir mat-icon   { color: #e74c3c; }
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px;
+  color: #aaa;
+
+  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+  p { margin: 0; font-size: 0.95rem; }
+}
+
+/* Dark mode */
+:host-context(.dark-theme) {
+  .page-header .page-title { color: #90caf9; }
+  .page-header .page-subtitle { color: #aaa; }
+
+  .table-card { background: #1e1e1e; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+  th.mat-header-cell { color: #ccc; }
+
+  .badge-perfil        { background: #1a3a5c; color: #90caf9; }
+  .badge-perfil.admin  { background: #3a1a5c; color: #ce93d8; }
+
+  .badge-situacao.ativo   { background: #1e4d2b; color: #80cbc4; }
+  .badge-situacao.inativo { background: #4a1010; color: #ef9a9a; }
+}

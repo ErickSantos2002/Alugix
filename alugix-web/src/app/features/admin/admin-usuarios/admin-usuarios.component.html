@@ -1,0 +1,119 @@
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">
+        <mat-icon>admin_panel_settings</mat-icon>
+        Gestão de Usuários
+      </h1>
+      <p class="page-subtitle">Painel administrativo — controle de acesso</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="novoUsuario()">
+      <mat-icon>person_add</mat-icon>
+      Novo Usuário
+    </button>
+  </div>
+
+  <!-- Filtro -->
+  <div class="filtros-container">
+    <mat-form-field appearance="outline" class="filtro-field">
+      <mat-label>Situação</mat-label>
+      <mat-select [formControl]="filtroAtivo">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="true">Ativo</mat-option>
+        <mat-option value="false">Inativo</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Tabela -->
+  <div class="table-card">
+    @if (loading()) {
+      <div class="loading-center">
+        <mat-spinner diameter="40" />
+      </div>
+    } @else {
+      <table mat-table [dataSource]="usuarios()">
+
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let u">
+            <div class="usuario-info">
+              <span class="usuario-nome">{{ u.nome }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>E-mail</th>
+          <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="perfil">
+          <th mat-header-cell *matHeaderCellDef>Perfil</th>
+          <td mat-cell *matCellDef="let u">
+            <span class="badge-perfil" [class.admin]="u.perfil === 'ADMIN'">
+              <mat-icon>{{ u.perfil === 'ADMIN' ? 'shield' : 'person' }}</mat-icon>
+              {{ u.perfil === 'ADMIN' ? 'Administrador' : 'Usuário' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ativo">
+          <th mat-header-cell *matHeaderCellDef>Situação</th>
+          <td mat-cell *matCellDef="let u">
+            <span class="badge-situacao" [class.ativo]="u.ativo" [class.inativo]="!u.ativo">
+              {{ u.ativo ? 'Ativo' : 'Inativo' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Criado em</th>
+          <td mat-cell *matCellDef="let u">{{ u.createdAt | date:'dd/MM/yyyy' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let u">
+            <div class="acoes">
+              <button mat-icon-button matTooltip="Editar" (click)="editarUsuario(u)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button
+                [matTooltip]="u.ativo ? 'Desativar' : 'Reativar'"
+                [class.btn-desativar]="u.ativo"
+                [class.btn-reativar]="!u.ativo"
+                (click)="alternarAtivo(u)">
+                <mat-icon>{{ u.ativo ? 'person_off' : 'person' }}</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Excluir" class="btn-excluir" (click)="excluirUsuario(u)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+
+      </table>
+
+      @if (usuarios().length === 0) {
+        <div class="empty-state">
+          <mat-icon>people</mat-icon>
+          <p>Nenhum usuário encontrado</p>
+        </div>
+      }
+
+      <mat-paginator
+        [length]="totalElementos()"
+        [pageSize]="size"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="paginar($event)"
+        showFirstLastButtons />
+    }
+  </div>
+
+</div>

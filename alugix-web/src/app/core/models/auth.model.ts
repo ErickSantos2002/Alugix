@@ -5,12 +5,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  refreshToken: string;
+  tipo: string;
   expiresIn: number;
-  usuario: {
-    id: number;
-    nome: string;
-    email: string;
-    perfil: 'ADMIN' | 'USUARIO';
-  };
+  nome: string;
+  perfil: 'ADMIN' | 'USUARIO';
 }

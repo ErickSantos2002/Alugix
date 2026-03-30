@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
   // Redireciona raiz para dashboard
@@ -44,7 +45,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/contratos/contrato-detalhe/contrato-detalhe.component').then((m) => m.ContratoDetalheComponent),
       },
-
+      {
+        path: 'admin',
+        loadComponent: () =>
+          import('./features/admin/admin-usuarios/admin-usuarios.component').then((m) => m.AdminUsuariosComponent),
+        canActivate: [roleGuard('ADMIN')],
+      },
     ],
   },
 

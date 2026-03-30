@@ -27,8 +27,8 @@ export class AuthService {
   // ─── Logout ───────────────────────────────────────────────────────────────
   logout(): void {
     localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('usuario');
+    localStorage.removeItem('nome');
+    localStorage.removeItem('perfil');
     this._isAuthenticated$.next(false);
     this.router.navigate(['/login']);
   }
@@ -43,18 +43,9 @@ export class AuthService {
   }
 
   getRole(): 'ADMIN' | 'USUARIO' | null {
-    const usuario = this.getUsuario();
-    return usuario ? usuario.perfil : null;
-  }
-
-  getUsuario(): LoginResponse['usuario'] | null {
-    const raw = localStorage.getItem('usuario');
-    if (!raw || raw === 'undefined' || raw === 'null') return null;
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
+    const raw = localStorage.getItem('perfil');
+    if (raw === 'ADMIN' || raw === 'USUARIO') return raw;
+    return null;
   }
 
   isAdmin(): boolean {
@@ -62,14 +53,14 @@ export class AuthService {
   }
 
   getUserName(): string | null {
-    return this.getUsuario()?.nome ?? null;
+    return localStorage.getItem('nome');
   }
 
   // ─── Privados ─────────────────────────────────────────────────────────────
   private saveSession(response: LoginResponse): void {
     localStorage.setItem('token', response.token);
-    localStorage.setItem('refreshToken', response.refreshToken);
-    localStorage.setItem('usuario', JSON.stringify(response.usuario));
+    localStorage.setItem('nome', response.nome);
+    localStorage.setItem('perfil', response.perfil);
     this._isAuthenticated$.next(true);
   }
 
