@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // Redireciona raiz para login
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Redireciona raiz para dashboard
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
   // Rota pública
   {
@@ -44,11 +44,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/contratos/contrato-detalhe/contrato-detalhe.component').then((m) => m.ContratoDetalheComponent),
       },
-      {
-        path: 'pagamentos',
-        loadComponent: () =>
-          import('./features/pagamentos/pagamentos-list/pagamentos-list.component').then((m) => m.PagamentosListComponent),
-      },
+
     ],
   },
 

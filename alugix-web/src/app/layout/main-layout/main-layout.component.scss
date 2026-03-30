@@ -28,9 +28,4 @@
   padding: 24px;
   overflow-y: auto;
   height: calc(100% - 64px);
-
-  > * {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
 }

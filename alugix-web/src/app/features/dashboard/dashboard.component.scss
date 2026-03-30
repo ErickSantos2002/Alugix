@@ -1,0 +1,353 @@
+.dashboard-container {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: var(--primary-color, #1a5276);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #1a5276;
+  }
+}
+
+/* Loading */
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+/* Grid de cards de resumo */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+
+/* Card de resumo genérico */
+.resumo-card {
+  border-radius: 12px !important;
+  border-left: 5px solid transparent;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 16px 12px !important;
+  }
+
+  mat-card-footer {
+    padding: 8px 16px 14px !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
+.card-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+    color: #fff;
+  }
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.card-label {
+  font-size: 0.82rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Cores por card */
+.card-imoveis  { border-left-color: #1a5276; .card-icon-wrap { background: #1a5276; } .card-value { color: #1a5276; } }
+.card-inquilinos { border-left-color: #117a65; .card-icon-wrap { background: #117a65; } .card-value { color: #117a65; } }
+.card-contratos  { border-left-color: #6c3483; .card-icon-wrap { background: #6c3483; } .card-value { color: #6c3483; } }
+.card-atrasados  { border-left-color: #c0392b; .card-icon-wrap { background: #c0392b; } .card-value { color: #c0392b; } }
+.card-atrasados.sem-atraso { border-left-color: #117a65; .card-icon-wrap { background: #117a65; } .card-value { color: #117a65; } }
+
+/* Badges dentro do card de imóveis */
+.badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+
+  &.disponivel   { background: #d5f5e3; color: #1e8449; }
+  &.alugado      { background: #d6eaf8; color: #1a5276; }
+  &.manutencao   { background: #fdebd0; color: #d35400; }
+}
+
+/* Card de receita */
+.receita-card {
+  border-radius: 12px !important;
+
+  mat-card-avatar {
+    background: #1a5276;
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% !important;
+  }
+
+  mat-card-content {
+    padding: 8px 16px 16px !important;
+  }
+}
+
+.receita-valores {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 16px;
+
+  @media (max-width: 600px) { flex-direction: column; gap: 8px; }
+}
+
+.receita-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.receita-label {
+  font-size: 0.78rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.receita-valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 2px;
+
+  &.prevista   { color: #1a5276; }
+  &.realizada  { color: #117a65; }
+  &.percentual { color: #6c3483; }
+}
+
+.receita-bar {
+  height: 8px !important;
+  border-radius: 4px !important;
+  margin-bottom: 16px;
+}
+
+.pagamentos-status {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+  &.pago     { color: #117a65; }
+  &.pendente { color: #d35400; }
+  &.atrasado { color: #c0392b; }
+}
+
+/* Grid de alertas */
+.alertas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+.alerta-card {
+  border-radius: 12px !important;
+
+  mat-card-content { padding: 8px 16px 16px !important; }
+
+  .icon-danger  { color: #c0392b !important; }
+  .icon-warning { color: #d35400 !important; }
+
+  mat-card-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent !important;
+  }
+}
+
+/* Lista de itens de alerta */
+.lista-alertas {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alerta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: rgba(0, 0, 0, 0.04); }
+}
+
+.alerta-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.alerta-nome {
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alerta-sub {
+  font-size: 0.78rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alerta-direita {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.alerta-valor {
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.atrasado-badge {
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: #fadbd8;
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.vencer-badge {
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 700;
+
+  &.urgente  { background: #fadbd8; color: #c0392b; }
+  &.atencao  { background: #fdebd0; color: #d35400; }
+  &.normal   { background: #d5f5e3; color: #1e8449; }
+}
+
+/* Estado vazio */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 0;
+  color: #888;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: #2ecc71;
+  }
+
+  span { font-size: 0.9rem; }
+}
+
+/* Dark mode */
+:host-context(.dark-theme) {
+  .dashboard-header h1 { color: #90caf9; }
+  .dashboard-header mat-icon { color: #90caf9; }
+
+  .resumo-card { background: #1e1e1e !important; }
+  .card-label  { color: #aaa; }
+
+  .card-imoveis  { border-left-color: #90caf9; .card-icon-wrap { background: #1a5276; } .card-value { color: #90caf9; } }
+  .card-inquilinos { border-left-color: #80cbc4; .card-icon-wrap { background: #117a65; } .card-value { color: #80cbc4; } }
+  .card-contratos  { border-left-color: #ce93d8; .card-icon-wrap { background: #6c3483; } .card-value { color: #ce93d8; } }
+  .card-atrasados  { border-left-color: #ef9a9a; .card-icon-wrap { background: #c0392b; } .card-value { color: #ef9a9a; } }
+
+  .badge {
+    &.disponivel { background: #1e4d2b; color: #80cbc4; }
+    &.alugado    { background: #1a3a5c; color: #90caf9; }
+    &.manutencao { background: #4d2e0a; color: #ffcc80; }
+  }
+
+  .receita-card  { background: #1e1e1e !important; }
+  .receita-label { color: #aaa; }
+  .alerta-card   { background: #1e1e1e !important; }
+  .alerta-sub    { color: #aaa; }
+
+  .alerta-item:hover { background: rgba(255,255,255,0.06); }
+
+  .atrasado-badge { background: #4a1010; color: #ef9a9a; }
+  .vencer-badge {
+    &.urgente { background: #4a1010; color: #ef9a9a; }
+    &.atencao { background: #4a2800; color: #ffcc80; }
+    &.normal  { background: #1e4d2b; color: #80cbc4; }
+  }
+}

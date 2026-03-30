@@ -1,0 +1,210 @@
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <mat-icon>dashboard</mat-icon>
+    <h1>Dashboard</h1>
+  </div>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="loading-center">
+      <mat-spinner diameter="48" />
+    </div>
+  } @else {
+
+    <!-- Cards de resumo -->
+    @if (resumo(); as r) {
+      <div class="cards-grid">
+
+        <mat-card class="resumo-card card-imoveis">
+          <mat-card-content>
+            <div class="card-icon-wrap">
+              <mat-icon>home</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-value">{{ r.totalImoveis }}</span>
+              <span class="card-label">Total de Imóveis</span>
+            </div>
+          </mat-card-content>
+          <mat-card-footer class="card-sub-info">
+            <span class="badge disponivel">{{ r.imoveisDisponiveis }} disponíveis</span>
+            <span class="badge alugado">{{ r.imoveisAlugados }} alugados</span>
+            <span class="badge manutencao">{{ r.imoveisManutencao }} manutenção</span>
+          </mat-card-footer>
+        </mat-card>
+
+        <mat-card class="resumo-card card-inquilinos">
+          <mat-card-content>
+            <div class="card-icon-wrap">
+              <mat-icon>people</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-value">{{ r.totalInquilinos }}</span>
+              <span class="card-label">Inquilinos Ativos</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="resumo-card card-contratos">
+          <mat-card-content>
+            <div class="card-icon-wrap">
+              <mat-icon>description</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-value">{{ r.totalContratosAtivos }}</span>
+              <span class="card-label">Contratos Ativos</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="resumo-card card-atrasados" [class.sem-atraso]="r.totalPagamentosAtrasados === 0">
+          <mat-card-content>
+            <div class="card-icon-wrap">
+              <mat-icon>warning</mat-icon>
+            </div>
+            <div class="card-info">
+              <span class="card-value">{{ r.totalPagamentosAtrasados }}</span>
+              <span class="card-label">Pagamentos Atrasados</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    }
+
+    <!-- Receita do mês -->
+    @if (receita(); as rc) {
+      <mat-card class="receita-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>account_balance_wallet</mat-icon>
+          <mat-card-title>Receita — {{ mesNome() }}</mat-card-title>
+          <mat-card-subtitle>Prevista vs Realizada</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="receita-valores">
+            <div class="receita-item">
+              <span class="receita-label">Prevista</span>
+              <span class="receita-valor prevista">{{ rc.receitaPrevista | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            </div>
+            <div class="receita-item">
+              <span class="receita-label">Realizada</span>
+              <span class="receita-valor realizada">{{ rc.receitaRealizada | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+            </div>
+            <div class="receita-item">
+              <span class="receita-label">Percentual</span>
+              <span class="receita-valor percentual">{{ receitaPercent() }}%</span>
+            </div>
+          </div>
+
+          <mat-progress-bar
+            mode="determinate"
+            [value]="receitaPercent()"
+            [color]="receitaPercent() >= 100 ? 'primary' : receitaPercent() >= 60 ? 'accent' : 'warn'"
+            class="receita-bar"
+          />
+
+          <div class="pagamentos-status">
+            <div class="status-item pago">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{ rc.pagamentosPagos }} pagos</span>
+            </div>
+            <div class="status-item pendente">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ rc.pagamentosPendentes }} pendentes</span>
+            </div>
+            <div class="status-item atrasado">
+              <mat-icon>error</mat-icon>
+              <span>{{ rc.pagamentosAtrasados }} atrasados</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Alertas: Inadimplência + Contratos a vencer -->
+    <div class="alertas-grid">
+
+      <!-- Inadimplência -->
+      <mat-card class="alerta-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="icon-danger">error_outline</mat-icon>
+          <mat-card-title>Inadimplência</mat-card-title>
+          <mat-card-subtitle>
+            @if (inadimplencia(); as ind) {
+              {{ ind.total }} {{ ind.total === 1 ? 'pagamento atrasado' : 'pagamentos atrasados' }}
+              — {{ ind.valorTotalAtrasado | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+            }
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (inadimplencia(); as ind) {
+            @if (ind.pagamentos.length === 0) {
+              <div class="empty-state">
+                <mat-icon>check_circle</mat-icon>
+                <span>Nenhuma inadimplência! </span>
+              </div>
+            } @else {
+              <div class="lista-alertas">
+                @for (p of ind.pagamentos; track p.pagamentoId) {
+                  <div class="alerta-item" (click)="irParaContrato(p.contratoId)" matTooltip="Ver contrato">
+                    <div class="alerta-info">
+                      <span class="alerta-nome">{{ p.nomeInquilino }}</span>
+                      <span class="alerta-sub">{{ p.nomeImovel }}</span>
+                    </div>
+                    <div class="alerta-direita">
+                      <span class="alerta-valor">{{ p.valorAluguel | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                      <span class="badge atrasado-badge">{{ p.diasAtraso }}d atraso</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Contratos a vencer -->
+      <mat-card class="alerta-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="icon-warning">event_busy</mat-icon>
+          <mat-card-title>Contratos a Vencer</mat-card-title>
+          <mat-card-subtitle>
+            @if (contratosVencer(); as cv) {
+              {{ cv.total }} {{ cv.total === 1 ? 'contrato' : 'contratos' }} nos próximos 30 dias
+            }
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (contratosVencer(); as cv) {
+            @if (cv.contratos.length === 0) {
+              <div class="empty-state">
+                <mat-icon>check_circle</mat-icon>
+                <span>Nenhum contrato vencendo em breve!</span>
+              </div>
+            } @else {
+              <div class="lista-alertas">
+                @for (c of cv.contratos; track c.contratoId) {
+                  <div class="alerta-item" [ngClass]="urgenciaClass(c.diasRestantes)" (click)="irParaContrato(c.contratoId)" matTooltip="Ver contrato">
+                    <div class="alerta-info">
+                      <span class="alerta-nome">{{ c.nomeInquilino }}</span>
+                      <span class="alerta-sub">{{ c.nomeImovel }}</span>
+                    </div>
+                    <div class="alerta-direita">
+                      <span class="alerta-valor">{{ c.dataTermino | date:'dd/MM/yyyy' }}</span>
+                      <span class="badge vencer-badge" [ngClass]="urgenciaClass(c.diasRestantes)">
+                        {{ c.diasRestantes }}d restantes
+                      </span>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          }
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+  }
+</div>
