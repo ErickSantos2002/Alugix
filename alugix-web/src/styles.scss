@@ -394,8 +394,8 @@ body {
 }
 
 .action-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border: none;
   border-radius: 8px;
   display: inline-flex;
@@ -403,17 +403,19 @@ body {
   justify-content: center;
   cursor: pointer;
   transition: all 0.15s;
+  outline: none;
+  flex-shrink: 0;
 
-  mat-icon { font-size: 17px; width: 17px; height: 17px; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
 
   &:disabled { opacity: 0.35; cursor: not-allowed; }
 
-  &.edit   { background: #EFF6FF; color: #1D4ED8; &:hover:not(:disabled) { background: #DBEAFE; } }
-  &.manut  { background: #FFF7ED; color: #C2410C; &:hover:not(:disabled) { background: #FFEDD5; } }
-  &.view   { background: #F0FDF4; color: #15803D; &:hover:not(:disabled) { background: #DCFCE7; } }
-  &.close  { background: #FFF7ED; color: #C2410C; &:hover:not(:disabled) { background: #FFEDD5; } }
-  &.toggle { background: #F0F9FF; color: #0369A1; &:hover:not(:disabled) { background: #E0F2FE; } }
-  &.delete { background: #FEF2F2; color: #DC2626; &:hover:not(:disabled) { background: #FEE2E2; } }
+  &.edit   { background-color: #EFF6FF !important; color: #1D4ED8 !important; &:hover:not(:disabled) { background-color: #DBEAFE !important; } }
+  &.manut  { background-color: #FFF7ED !important; color: #C2410C !important; &:hover:not(:disabled) { background-color: #FFEDD5 !important; } }
+  &.view   { background-color: #F0FDF4 !important; color: #15803D !important; &:hover:not(:disabled) { background-color: #DCFCE7 !important; } }
+  &.close  { background-color: #FFF7ED !important; color: #C2410C !important; &:hover:not(:disabled) { background-color: #FFEDD5 !important; } }
+  &.toggle { background-color: #F0F9FF !important; color: #0369A1 !important; &:hover:not(:disabled) { background-color: #E0F2FE !important; } }
+  &.delete { background-color: #FEF2F2 !important; color: #DC2626 !important; &:hover:not(:disabled) { background-color: #FEE2E2 !important; } }
 }
 
 // Empty state
