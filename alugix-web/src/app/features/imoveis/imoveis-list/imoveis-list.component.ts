@@ -51,7 +51,7 @@ export class ImoveisListComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
 
   // Colunas da tabela
-  readonly colunas = ['nome', 'tipo', 'endereco', 'valorAluguel', 'status', 'ativo', 'acoes'];
+  readonly colunas = ['nome', 'endereco', 'valorAluguel', 'status', 'ativo', 'acoes'];
 
   // Estado da tela
   imoveis = signal<ImovelResponse[]>([]);

@@ -152,3 +152,283 @@ body {
   border-radius: 3px;
   &:hover { background: #94A3B8; }
 }
+
+// ─── Shared Table System ────────────────────────────────────────────────────
+
+// Page layout
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #1B4F72;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+    color: #64748B;
+    margin: 4px 0 0;
+  }
+}
+
+.filtros-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .filtro-field  { width: 200px; }
+  .busca-field   { width: 300px; }
+}
+
+// Table container
+.table-container,
+.table-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+
+  table { width: 100%; }
+}
+
+.loading-overlay,
+.loading-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: rgba(255,255,255,0.75);
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+// Column alignment helpers
+.col-left   { text-align: left !important; }
+.col-center { text-align: center !important; }
+
+// Row padding
+.mat-mdc-row .mat-mdc-cell {
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+}
+
+// Row hover
+.table-row {
+  transition: background 0.12s;
+  cursor: default;
+  &:hover { background: #F8FBFF !important; }
+  &.clickable { cursor: pointer; }
+}
+
+// Name cell with icon
+.entity-nome-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.entity-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &.blue   { background: #EBF5FB; mat-icon { color: #1565C0; } }
+  &.green  { background: #ECFDF5; mat-icon { color: #059669; } }
+  &.purple { background: #F3E8FF; mat-icon { color: #7C3AED; } }
+  &.orange { background: #FFF7ED; mat-icon { color: #C2410C; } }
+}
+
+.entity-nome {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1E293B;
+}
+
+.entity-sub {
+  display: block;
+  font-size: 12px;
+  color: #64748B;
+  margin-top: 1px;
+}
+
+// Muted cell
+.muted-cell {
+  color: #64748B;
+  font-size: 13px;
+}
+
+// Addr cell
+.addr-icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  vertical-align: middle;
+  margin-right: 4px;
+  color: #94A3B8;
+}
+
+// Value chip
+.valor-chip {
+  display: inline-block;
+  background: #F0FFF4;
+  color: #276749;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid #C6F6D5;
+}
+
+// Status badges — all variants
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  // imóveis
+  &.status-disponivel  { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+  &.status-alugado     { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+  &.status-manutencao  { background: #FFF7ED; color: #9A3412; border: 1px solid #FED7AA; }
+
+  // contratos
+  &.status-ativo       { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+  &.status-encerrado   { background: #F8FAFC; color: #475569; border: 1px solid #CBD5E1; }
+  &.status-atrasado    { background: #FEF2F2; color: #991B1B; border: 1px solid #FEE2E2; }
+
+  // pagamentos
+  &.status-pago        { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+  &.status-pendente    { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+}
+
+// Profile badge
+.badge-perfil {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #EFF6FF;
+  color: #1E40AF;
+  border: 1px solid #BFDBFE;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+
+  &.admin {
+    background: #FDF4FF;
+    color: #7E22CE;
+    border-color: #E9D5FF;
+  }
+}
+
+// Situação badge (ativo/inativo)
+.badge-situacao {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.ativo   { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+  &.inativo { background: #F8FAFC; color: #64748B; border: 1px solid #CBD5E1; }
+}
+
+// Toggle button
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.15s;
+
+  mat-icon { font-size: 30px; width: 30px; height: 30px; }
+
+  &.toggle-on  { mat-icon { color: #10B981; } &:hover { background: #ECFDF5; } }
+  &.toggle-off { mat-icon { color: #CBD5E1; } &:hover { background: #F8FAFC; } }
+}
+
+// Action buttons
+.acoes-cell,
+.acoes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  mat-icon { font-size: 17px; width: 17px; height: 17px; }
+
+  &:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  &.edit   { background: #EFF6FF; color: #1D4ED8; &:hover:not(:disabled) { background: #DBEAFE; } }
+  &.manut  { background: #FFF7ED; color: #C2410C; &:hover:not(:disabled) { background: #FFEDD5; } }
+  &.view   { background: #F0FDF4; color: #15803D; &:hover:not(:disabled) { background: #DCFCE7; } }
+  &.close  { background: #FFF7ED; color: #C2410C; &:hover:not(:disabled) { background: #FFEDD5; } }
+  &.toggle { background: #F0F9FF; color: #0369A1; &:hover:not(:disabled) { background: #E0F2FE; } }
+  &.delete { background: #FEF2F2; color: #DC2626; &:hover:not(:disabled) { background: #FEE2E2; } }
+}
+
+// Empty state
+.empty-state {
+  text-align: center;
+  padding: 56px 24px !important;
+  color: #94A3B8;
+
+  mat-icon {
+    font-size: 52px !important;
+    width: 52px !important;
+    height: 52px !important;
+    margin-bottom: 12px;
+    color: #CBD5E1;
+  }
+
+  p { margin: 0 0 16px; font-size: 15px; }
+}

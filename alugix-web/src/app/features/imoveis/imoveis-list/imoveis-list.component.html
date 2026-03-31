@@ -55,36 +55,41 @@
 
       <!-- Nome -->
       <ng-container matColumnDef="nome">
-        <th mat-header-cell *matHeaderCellDef>Nome</th>
-        <td mat-cell *matCellDef="let row">
-          <span class="imovel-nome">{{ row.nome }}</span>
+        <th mat-header-cell *matHeaderCellDef class="col-left">Nome</th>
+        <td mat-cell *matCellDef="let row" class="col-left">
+          <div class="imovel-nome-cell">
+            <div class="imovel-icon-wrap">
+              <mat-icon>{{ row.tipo === 'APARTAMENTO' ? 'apartment' : row.tipo === 'SALA_COMERCIAL' ? 'store' : 'cottage' }}</mat-icon>
+            </div>
+            <div>
+              <span class="imovel-nome">{{ row.nome }}</span>
+              <span class="imovel-tipo-sub">{{ getTipoLabel(row.tipo) }}</span>
+            </div>
+          </div>
         </td>
-      </ng-container>
-
-      <!-- Tipo -->
-      <ng-container matColumnDef="tipo">
-        <th mat-header-cell *matHeaderCellDef>Tipo</th>
-        <td mat-cell *matCellDef="let row">{{ getTipoLabel(row.tipo) }}</td>
       </ng-container>
 
       <!-- Endereço -->
       <ng-container matColumnDef="endereco">
-        <th mat-header-cell *matHeaderCellDef>Endereço</th>
-        <td mat-cell *matCellDef="let row" class="endereco-cell">{{ row.endereco }}</td>
+        <th mat-header-cell *matHeaderCellDef class="col-left">Endereço</th>
+        <td mat-cell *matCellDef="let row" class="col-left endereco-cell">
+          <mat-icon class="addr-icon">place</mat-icon>
+          {{ row.endereco }}
+        </td>
       </ng-container>
 
       <!-- Valor -->
       <ng-container matColumnDef="valorAluguel">
-        <th mat-header-cell *matHeaderCellDef>Aluguel</th>
-        <td mat-cell *matCellDef="let row">
-          <strong>{{ formatarValor(row.valorAluguel) }}</strong>
+        <th mat-header-cell *matHeaderCellDef class="col-center">Aluguel</th>
+        <td mat-cell *matCellDef="let row" class="col-center">
+          <span class="valor-chip">{{ formatarValor(row.valorAluguel) }}</span>
         </td>
       </ng-container>
 
       <!-- Status -->
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let row">
+        <th mat-header-cell *matHeaderCellDef class="col-center">Status</th>
+        <td mat-cell *matCellDef="let row" class="col-center">
           <span class="status-badge" [class]="'status-' + row.status.toLowerCase()">
             {{ getStatusLabel(row.status) }}
           </span>
@@ -93,42 +98,42 @@
 
       <!-- Ativo -->
       <ng-container matColumnDef="ativo">
-        <th mat-header-cell *matHeaderCellDef>Ativo</th>
-        <td mat-cell *matCellDef="let row">
-          <button mat-icon-button
+        <th mat-header-cell *matHeaderCellDef class="col-center">Ativo</th>
+        <td mat-cell *matCellDef="let row" class="col-center">
+          <button class="toggle-btn"
+                  [class.toggle-on]="row.ativo"
+                  [class.toggle-off]="!row.ativo"
                   [matTooltip]="row.ativo ? 'Desativar' : 'Ativar'"
                   (click)="alternarAtivo(row)">
-            <mat-icon [style.color]="row.ativo ? '#2E7D32' : '#C62828'">
-              {{ row.ativo ? 'toggle_on' : 'toggle_off' }}
-            </mat-icon>
+            <mat-icon>{{ row.ativo ? 'toggle_on' : 'toggle_off' }}</mat-icon>
           </button>
         </td>
       </ng-container>
 
       <!-- Ações -->
       <ng-container matColumnDef="acoes">
-        <th mat-header-cell *matHeaderCellDef>Ações</th>
-        <td mat-cell *matCellDef="let row">
-          <button mat-icon-button matTooltip="Editar" (click)="editarImovel(row)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button
-                  [matTooltip]="row.status === 'MANUTENCAO' ? 'Retornar para Disponível' : 'Colocar em Manutenção'"
-                  [color]="row.status === 'MANUTENCAO' ? 'primary' : ''"
-                  [disabled]="row.status === 'ALUGADO'"
-                  (click)="alternarManutencao(row)">
-            <mat-icon>build</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Excluir" color="warn" (click)="excluirImovel(row)">
-            <mat-icon>delete</mat-icon>
-          </button>
+        <th mat-header-cell *matHeaderCellDef class="col-center">Ações</th>
+        <td mat-cell *matCellDef="let row" class="col-center">
+          <div class="acoes-cell">
+            <button class="action-btn edit" matTooltip="Editar" (click)="editarImovel(row)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button class="action-btn manut"
+                    [matTooltip]="row.status === 'MANUTENCAO' ? 'Retornar disponível' : 'Colocar em manutenção'"
+                    [disabled]="row.status === 'ALUGADO'"
+                    (click)="alternarManutencao(row)">
+              <mat-icon>{{ row.status === 'MANUTENCAO' ? 'check_circle' : 'construction' }}</mat-icon>
+            </button>
+            <button class="action-btn delete" matTooltip="Excluir" (click)="excluirImovel(row)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="colunas"></tr>
       <tr mat-row *matRowDef="let row; columns: colunas;" class="table-row"></tr>
 
-      <!-- Empty state -->
       <tr class="mat-row" *matNoDataRow>
         <td [colSpan]="colunas.length" class="empty-state">
           <mat-icon>home_work</mat-icon>

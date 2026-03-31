@@ -1,6 +1,5 @@
 <div class="page-container">
 
-  <!-- Header -->
   <div class="page-header">
     <div>
       <h1 class="page-title">
@@ -15,7 +14,6 @@
     </button>
   </div>
 
-  <!-- Filtro -->
   <div class="filtros-container">
     <mat-form-field appearance="outline" class="filtro-field">
       <mat-label>Situação</mat-label>
@@ -27,7 +25,6 @@
     </mat-form-field>
   </div>
 
-  <!-- Tabela -->
   <div class="table-card">
     @if (loading()) {
       <div class="loading-center">
@@ -37,32 +34,32 @@
       <table mat-table [dataSource]="usuarios()">
 
         <ng-container matColumnDef="nome">
-          <th mat-header-cell *matHeaderCellDef>Nome</th>
-          <td mat-cell *matCellDef="let u">
-            <div class="usuario-info">
-              <span class="usuario-nome">{{ u.nome }}</span>
+          <th mat-header-cell *matHeaderCellDef class="col-left">Usuário</th>
+          <td mat-cell *matCellDef="let u" class="col-left">
+            <div class="entity-nome-cell">
+              <div class="entity-icon-wrap" [class]="u.perfil === 'ADMIN' ? 'purple' : 'blue'">
+                <mat-icon>{{ u.perfil === 'ADMIN' ? 'shield' : 'person' }}</mat-icon>
+              </div>
+              <div>
+                <span class="entity-nome">{{ u.nome }}</span>
+                <span class="entity-sub">{{ u.email }}</span>
+              </div>
             </div>
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef>E-mail</th>
-          <td mat-cell *matCellDef="let u">{{ u.email }}</td>
-        </ng-container>
-
         <ng-container matColumnDef="perfil">
-          <th mat-header-cell *matHeaderCellDef>Perfil</th>
-          <td mat-cell *matCellDef="let u">
+          <th mat-header-cell *matHeaderCellDef class="col-center">Perfil</th>
+          <td mat-cell *matCellDef="let u" class="col-center">
             <span class="badge-perfil" [class.admin]="u.perfil === 'ADMIN'">
-              <mat-icon>{{ u.perfil === 'ADMIN' ? 'shield' : 'person' }}</mat-icon>
               {{ u.perfil === 'ADMIN' ? 'Administrador' : 'Usuário' }}
             </span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ativo">
-          <th mat-header-cell *matHeaderCellDef>Situação</th>
-          <td mat-cell *matCellDef="let u">
+          <th mat-header-cell *matHeaderCellDef class="col-center">Situação</th>
+          <td mat-cell *matCellDef="let u" class="col-center">
             <span class="badge-situacao" [class.ativo]="u.ativo" [class.inativo]="!u.ativo">
               {{ u.ativo ? 'Ativo' : 'Inativo' }}
             </span>
@@ -70,42 +67,42 @@
         </ng-container>
 
         <ng-container matColumnDef="createdAt">
-          <th mat-header-cell *matHeaderCellDef>Criado em</th>
-          <td mat-cell *matCellDef="let u">{{ u.createdAt | date:'dd/MM/yyyy' }}</td>
+          <th mat-header-cell *matHeaderCellDef class="col-center">Criado em</th>
+          <td mat-cell *matCellDef="let u" class="col-center muted-cell">
+            {{ u.createdAt | date:'dd/MM/yyyy' }}
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="acoes">
-          <th mat-header-cell *matHeaderCellDef>Ações</th>
-          <td mat-cell *matCellDef="let u">
-            <div class="acoes">
-              <button mat-icon-button matTooltip="Editar" (click)="editarUsuario(u)">
+          <th mat-header-cell *matHeaderCellDef class="col-center">Ações</th>
+          <td mat-cell *matCellDef="let u" class="col-center">
+            <div class="acoes-cell">
+              <button class="action-btn edit" matTooltip="Editar" (click)="editarUsuario(u)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button
+              <button class="action-btn toggle"
                 [matTooltip]="u.ativo ? 'Desativar' : 'Reativar'"
-                [class.btn-desativar]="u.ativo"
-                [class.btn-reativar]="!u.ativo"
                 (click)="alternarAtivo(u)">
                 <mat-icon>{{ u.ativo ? 'person_off' : 'person' }}</mat-icon>
               </button>
-              <button mat-icon-button matTooltip="Excluir" class="btn-excluir" (click)="excluirUsuario(u)">
-                <mat-icon>delete</mat-icon>
+              <button class="action-btn delete" matTooltip="Excluir" (click)="excluirUsuario(u)">
+                <mat-icon>delete_outline</mat-icon>
               </button>
             </div>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="colunas"></tr>
-        <tr mat-row *matRowDef="let row; columns: colunas;"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunas;" class="table-row"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td [colSpan]="colunas.length" class="empty-state">
+            <mat-icon>people</mat-icon>
+            <p>Nenhum usuário encontrado</p>
+          </td>
+        </tr>
 
       </table>
-
-      @if (usuarios().length === 0) {
-        <div class="empty-state">
-          <mat-icon>people</mat-icon>
-          <p>Nenhum usuário encontrado</p>
-        </div>
-      }
 
       <mat-paginator
         [length]="totalElementos()"

@@ -35,7 +35,7 @@ export class InquilinosListComponent implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly dialog = inject(MatDialog);
 
-  readonly colunas = ['nome', 'cpf', 'telefone', 'email', 'rendaMensal', 'ativo', 'acoes'];
+  readonly colunas = ['nome', 'telefone', 'email', 'rendaMensal', 'ativo', 'acoes'];
 
   inquilinos = signal<InquilinoResponse[]>([]);
   totalElements = signal(0);
