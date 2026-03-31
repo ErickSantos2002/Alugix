@@ -6,7 +6,7 @@ Design Patterns • Nomenclatura • Arquitetura • Git • UI Design
 
 *Regras obrigatórias para Erick (Back) e Welton (Front)*
 
-**Versão 1.0 — Fevereiro de 2026**
+**Versão 1.1 — Março de 2026**
 
 **Sumário**
 
@@ -47,6 +47,15 @@ Design Patterns • Nomenclatura • Arquitetura • Git • UI Design
 # 9. Code Review Cruzado
 
 # 10. Padrão Visual / UI Design (Welton)
+
+  - 10.0 Tema (claro único — dark mode removido)
+  - 10.1 Paleta de Cores (Design Tokens)
+  - 10.4 Layout Principal
+  - 10.5 Componentes de UI Padrão
+  - 10.6 Padrão de Badges de Status
+  - 10.7 Responsividade
+  - 10.8 Sistema de Tabelas Global
+  - 10.9 Tipografia
 
 # 11. Checklist de Qualidade
 
@@ -303,7 +312,10 @@ Cada feature module é carregado sob demanda para performance:
  │ ├── interceptors/ // token.interceptor.ts, error.interceptor.ts
  │ └── services/ // auth.service.ts (APENAS auth aqui)
  ├── shared/ // Componentes reutilizáveis
- │ ├── components/ // confirm-dialog/, loading-spinner/, status-badge/
+ │ ├── components/
+ │ │ ├── confirm-dialog/ // ConfirmDialogComponent — diálogos de confirmação
+ │ │ └── pagination/ // PaginationComponent — paginação customizada (desktop + mobile)
+ │ ├── directives/ // date-mask.directive.ts
  │ ├── pipes/ // cpf.pipe.ts, currency-br.pipe.ts
  │ └── validators/ // cpf.validator.ts
  ├── features/ // Lazy-loaded modules
@@ -425,12 +437,11 @@ Exemplo de Controller padrão:
 ### 7.4 Estilização
 
 - Angular Material como base — não reinventar componentes
-
-- Variáveis SCSS para cores do tema (nunca hardcode)
-
-- Mobile-first: @media (min-width: ...)
-
-- Nunca usar !important
+- **CSS custom properties** (variáveis CSS no `:root`) para cores e tokens — definidas em `styles.scss`
+- **Nunca hardcode de cor** fora de `styles.scss` — usar `var(--primary)`, `var(--text-muted)`, etc.
+- Mobile-first: `@media (max-width: 768px)` para ajustes responsivos
+- `!important` é permitido **exclusivamente** para sobrescrever estilos internos do Angular Material MDC (ex.: backgrounds de botões, bordas de inputs). Evitar em lógica de negócio visual própria
+- Estilos globais compartilhados (badges, tabelas, empty-state, action-btn) devem ficar em `styles.scss` — não duplicar em componentes
 
 ### 7.5 Interfaces / Models
 
@@ -554,148 +565,148 @@ Obrigatório: Erick revisa código do Welton. Welton revisa código do Erick.
 
 Esta seção define o padrão visual que Welton deve seguir em todas as telas do Alugix.
 
-## 10.0 Suporte a Tema Claro / Escuro
+## 10.0 Tema
 
-O Alugix suporta **dois temas**: claro (padrão) e escuro (dark mode).
+O Alugix utiliza **tema claro único**. Dark mode foi avaliado e descartado para manter foco na entrega das funcionalidades principais. Não há `ThemeService`, sem toggle de tema, sem classe `.dark-theme`.
 
-- O tema padrão ao abrir o sistema é o **claro**
-- O usuário pode alternar via **botão na toolbar** (ícone `light_mode` / `dark_mode`)
-- A preferência é salva no `localStorage` com a chave `alugix-theme`
-- Implementado via CSS custom properties + classe `.dark-theme` no `<body>`
-- **Nunca usar cores hardcoded** — sempre via variável CSS ou token do Angular Material
+> **Decisão técnica (Sprint 8):** dark mode removido do escopo para priorizar qualidade e responsividade do tema claro.
 
-## 10.1 Paleta de Cores
+## 10.1 Paleta de Cores (Design Tokens)
 
-### Tema Claro (padrão)
+Definida em `styles.scss` via CSS custom properties no `:root`:
 
-| **Uso**        | **Cor**     | **Hex**   | **Onde usar**                       |
-|----------------|-------------|-----------|-------------------------------------|
-| Primária       | Azul escuro | `#1B4F72` | Sidebar, headers, botões principais |
-| Primária Light | Azul claro  | `#2E86C1` | Links, hovers, destaques            |
-| Secundária     | Verde       | `#27AE60` | Botões de sucesso, badges 'Ativo'   |
-| Alerta         | Amarelo     | `#F39C12` | Badges 'Pendente', avisos           |
-| Erro           | Vermelho    | `#E74C3C` | Badges 'Atrasado', erros, exclusão  |
-| Texto          | Cinza escuro| `#2C3E50` | Texto principal                     |
-| Texto suave    | Cinza médio | `#7F8C8D` | Labels, subtítulos                  |
-| Surface        | Cinza claro | `#ECF0F1` | Backgrounds alternativos            |
-| Background     | Branco      | `#FFFFFF` | Fundo principal dos cards           |
+| **Token CSS**     | **Hex**             | **Onde usar**                            |
+|-------------------|---------------------|------------------------------------------|
+| `--primary`       | `#1565C0`           | Botões principais, links, page active    |
+| `--primary-dark`  | `#0D47A1`           | Hover de botões, sidebar escura          |
+| `--primary-light` | `#1976D2`           | Hovers suaves, bordas ativas             |
+| `--accent`        | `#26A69A`           | Badges de destaque, elementos secundários|
+| `--warn`          | `#E53935`           | Erros, exclusão, alertas críticos        |
+| `--bg`            | `#F4F6F9`           | Background geral da aplicação            |
+| `--surface`       | `#FFFFFF`           | Cards, modais, tabelas                   |
+| `--border`        | `#E2E8F0`           | Bordas de campos e divisores             |
+| `--text`          | `#1E293B`           | Texto principal                          |
+| `--text-muted`    | `#64748B`           | Labels, subtítulos, cabeçalhos de tabela |
+| `--text-light`    | `#94A3B8`           | Placeholder, ícones secundários          |
+| `--sidebar-from`  | `#0d1f35`           | Início do gradiente da sidebar           |
+| `--sidebar-to`    | `#1B4F72`           | Fim do gradiente da sidebar              |
+| `--radius-sm`     | `6px`               | Chips, badges                            |
+| `--radius-md`     | `10px`              | Botões, inputs                           |
+| `--radius-lg`     | `16px`              | Cards, modais                            |
 
-### Tema Escuro (dark mode)
-
-| **Uso**        | **Cor**          | **Hex**   | **Onde usar**                          |
-|----------------|------------------|-----------|----------------------------------------|
-| Primária       | Azul médio       | `#2E86C1` | Sidebar, headers, botões principais    |
-| Primária Light | Azul claro       | `#5DADE2` | Links, hovers, destaques              |
-| Secundária     | Verde            | `#27AE60` | Botões de sucesso, badges 'Ativo'      |
-| Alerta         | Amarelo          | `#F39C12` | Badges 'Pendente', avisos              |
-| Erro           | Vermelho         | `#E74C3C` | Badges 'Atrasado', erros, exclusão     |
-| Texto          | Branco suave     | `#E8EDF2` | Texto principal                        |
-| Texto suave    | Azul acinzentado | `#8FA3B3` | Labels, subtítulos                     |
-| Surface        | Azul escuro      | `#1E2D3E` | Cards, modais, formulários             |
-| Background     | Azul muito escuro| `#0F1923` | Fundo geral da aplicação               |
-| Sidebar        | Azul quase preto | `#0D1B2A` | Sidebar (mais escuro que o background) |
-| Borda          | Azul escuro suave| `#2A3F54` | Bordas de cards e inputs               |
-
-> **Racional das cores dark:** o azul escuro naval (`#0F1923`) foi escolhido por dar um aspecto premium e profissional, muito usado em SaaS financeiros modernos. Evita o preto puro (`#000`) que causa alto contraste agressivo, e mantém identidade com o azul da marca.
-
-**Configurar no styles.scss:**
+**Tema Angular Material configurado em `styles.scss`:**
 
 ```scss
-// Tema Claro
-$alugix-light-primary: #1B4F72;
-$alugix-light-accent:  #27AE60;
-$alugix-light-warn:    #E74C3C;
-$alugix-light-bg:      #FFFFFF;
-$alugix-light-surface: #ECF0F1;
-
-// Tema Escuro
-$alugix-dark-primary: #2E86C1;
-$alugix-dark-accent:  #27AE60;
-$alugix-dark-warn:    #E74C3C;
-$alugix-dark-bg:      #0F1923;
-$alugix-dark-surface: #1E2D3E;
+$alugix-primary: mat.m2-define-palette(mat.$m2-blue-palette, 800, 600, 900);
+$alugix-accent:  mat.m2-define-palette(mat.$m2-teal-palette, 400, 200, 700);
+$alugix-warn:    mat.m2-define-palette(mat.$m2-red-palette);
 ```
-
-## 10.2 Botão de Alternância de Tema
-
-- **Local:** toolbar superior, lado direito (antes do avatar/logout)
-- **Ícone claro:** `dark_mode` (lua) — clicando ativa o dark
-- **Ícone escuro:** `light_mode` (sol) — clicando ativa o claro
-- **Implementação:** `ThemeService` em `core/services/theme.service.ts`
-- **Persistência:** `localStorage.setItem('alugix-theme', 'dark' | 'light')`
 
 ## 10.4 Layout Principal
 
-O layout segue o padrão SPA com sidebar fixa:
+O layout segue o padrão SPA com sidebar fixa em desktop e overlay em mobile:
 
-> ┌───────────┬────────────────────────────────────────┐
- │ │ Toolbar (nome do usuário, logout) │
- │ Sidebar ├────────────────────────────────────────┤
- │ (240px) │ │
- │ │ Conteúdo Principal │
- │ Dashboard │ (\<router-outlet\>) │
- │ Imóveis │ │
- │ Inquilin. │ - Cards / Tabelas / Formulários │
- │ Contratos │ │
- │ Admin │ │
- └───────────┴────────────────────────────────────────┘
+```
+┌───────────┬────────────────────────────────────────┐
+│           │  Toolbar (avatar + nome + botão logout) │
+│  Sidebar  ├────────────────────────────────────────┤
+│  (240px)  │                                        │
+│           │  Conteúdo Principal (<router-outlet>)  │
+│ Dashboard │                                        │
+│  Imóveis  │  - Cards / Tabelas / Formulários       │
+│ Inquilin. │                                        │
+│ Contratos │                                        │
+│   Admin   │                                        │
+└───────────┴────────────────────────────────────────┘
+```
 
-- Sidebar: 240px fixa em desktop, colapsável em mobile (mat-sidenav)
-
-- Toolbar: 64px de altura, nome do usuário + avatar + botão logout
-
-- Conteúdo: padding 24px, max-width 1200px centralizado
+- **Sidebar:** 240px fixa em desktop; em mobile vira overlay (`mode="over"`) com fechamento ao clicar no link (`@Output linkClicked`) — implementado via `BreakpointObserver`
+- **Toolbar:** 64px de altura; avatar com iniciais do usuário + nome + botão de logout inline (sem dropdown)
+- **Conteúdo:** padding 24px (16px em mobile), scroll vertical e horizontal habilitados
+- **Componente:** `MainLayoutComponent` em `layout/main-layout/`
 
 ## 10.5 Componentes de UI Padrão
 
-|                    |                                            |                                         |
-|--------------------|--------------------------------------------|-----------------------------------------|
-| **Componente**     | **Quando usar**                            | **Material Component**                  |
-| Tabela de listagem | Imóveis, inquilinos, contratos, pagamentos | mat-table + mat-paginator + mat-sort    |
-| Formulário modal   | Cadastro e edição rápida                   | MatDialog + Reactive Form               |
-| Formulário página  | Cadastro complexo (contrato)               | Página dedicada + Stepper               |
-| Cards de resumo    | Dashboard (totais)                         | mat-card com ícone + número + label     |
-| Gráfico de barras  | Receita prevista vs recebida               | Chart.js (ng2-charts)                   |
-| Badge de status    | Status em listas e detalhes                | mat-chip com cor dinâmica               |
-| Dialog confirmação | Exclusão, encerramento                     | MatDialog com botões Cancelar/Confirmar |
-| Snackbar           | Feedback após ações                        | MatSnackBar (3s, posição bottom-right)  |
-| Loading spinner    | Enquanto carrega dados                     | mat-progress-spinner ou bar             |
-| Empty state        | Lista sem resultados                       | Ilustração + texto + botão de ação      |
+|                    |                                            |                                                  |
+|--------------------|--------------------------------------------|--------------------------------------------------|
+| **Componente**     | **Quando usar**                            | **Implementação**                                |
+| Tabela de listagem | Imóveis, inquilinos, contratos, usuários   | `mat-table` + `app-pagination` (customizado)     |
+| Paginação          | Rodapé de todas as listagens               | `PaginationComponent` em `shared/components/pagination/` — desktop (Anterior/números/Próxima) + mobile (< página >) |
+| Formulário modal   | Cadastro e edição rápida                   | `MatDialog` + `Reactive Form` — `maxWidth: '95vw'` obrigatório para responsividade |
+| Cards de resumo    | Dashboard (totais)                         | `mat-card` com ícone + número animado (countUp) + label |
+| Badge de status    | Status em listas e detalhes                | Classe CSS global `.status-badge` com variantes (`.status-disponivel`, `.status-ativo`, etc.) |
+| Dialog confirmação | Exclusão, toggle ativo/inativo, encerramento | `ConfirmDialogComponent` em `shared/components/confirm-dialog/` |
+| Snackbar           | Feedback após ações                        | `MatSnackBar` (3s, posição bottom-right)         |
+| Loading overlay    | Enquanto carrega dados em tabela           | `.loading-overlay` com `mat-spinner` (classe global em `styles.scss`) |
+| Empty state        | Lista sem resultados                       | `.empty-state` com `mat-icon` + texto + botão (classe global) |
+| Botões de ação     | Ações inline nas tabelas (editar, excluir) | `.action-btn` com variantes `.edit`, `.delete`, `.view`, `.toggle` + `matTooltip` obrigatório |
 
 ## 10.6 Padrão de Badges de Status
 
-|            |                           |                  |                       |
-|------------|---------------------------|------------------|-----------------------|
-| **Status** | **Cor de fundo**          | **Cor do texto** | **Aplica-se a**       |
-| DISPONIVEL | \#E8F5E9 (verde claro)    | \#2E7D32         | Imóveis               |
-| ALUGADO    | \#E3F2FD (azul claro)     | \#1565C0         | Imóveis               |
-| MANUTENCAO | \#FFF3E0 (laranja claro)  | \#E65100         | Imóveis               |
-| ATIVO      | \#E8F5E9 (verde claro)    | \#2E7D32         | Contratos, Inquilinos |
-| INATIVO    | \#ECEFF1 (cinza claro)    | \#546E7A         | Inquilinos            |
-| ENCERRADO  | \#ECEFF1 (cinza claro)    | \#546E7A         | Contratos             |
-| ATRASADO   | \#FFEBEE (vermelho claro) | \#C62828         | Contratos             |
-| PAGO       | \#E8F5E9 (verde claro)    | \#2E7D32         | Pagamentos            |
-| PENDENTE   | \#FFF3E0 (amarelo claro)  | \#E65100         | Pagamentos            |
-| ATRASADO   | \#FFEBEE (vermelho claro) | \#C62828         | Pagamentos            |
+Implementados como classes CSS globais em `styles.scss`. Uso: `<span class="status-badge status-disponivel">Disponível</span>`. Sem bolinha/dot — apenas texto com borda colorida.
+
+|                        |                  |           |                  |                                |
+|------------------------|------------------|-----------|------------------|--------------------------------|
+| **Classe CSS**         | **Fundo**        | **Texto** | **Borda**        | **Aplica-se a**                |
+| `.status-disponivel`   | `#ECFDF5`        | `#065F46` | `#A7F3D0`        | Imóveis                        |
+| `.status-alugado`      | `#EFF6FF`        | `#1E40AF` | `#BFDBFE`        | Imóveis                        |
+| `.status-manutencao`   | `#FFF7ED`        | `#9A3412` | `#FED7AA`        | Imóveis                        |
+| `.status-ativo`        | `#ECFDF5`        | `#065F46` | `#A7F3D0`        | Contratos                      |
+| `.status-encerrado`    | `#F8FAFC`        | `#475569` | `#CBD5E1`        | Contratos                      |
+| `.status-atrasado`     | `#FEF2F2`        | `#991B1B` | `#FEE2E2`        | Contratos, Pagamentos          |
+| `.status-pago`         | `#ECFDF5`        | `#065F46` | `#A7F3D0`        | Pagamentos                     |
+| `.status-pendente`     | `#FFFBEB`        | `#92400E` | `#FDE68A`        | Pagamentos                     |
+| `.badge-situacao.ativo`   | `#ECFDF5`     | `#065F46` | `#A7F3D0`        | Inquilinos/Usuários (ativo)    |
+| `.badge-situacao.inativo` | `#F8FAFC`     | `#64748B` | `#CBD5E1`        | Inquilinos/Usuários (inativo)  |
+| `.badge-perfil`           | `#EFF6FF`     | `#1E40AF` | `#BFDBFE`        | Usuários (USUARIO)             |
+| `.badge-perfil.admin`     | `#FDF4FF`     | `#7E22CE` | `#E9D5FF`        | Usuários (ADMIN)               |
 
 ## 10.7 Responsividade
 
-|                |                |                                                 |
-|----------------|----------------|-------------------------------------------------|
-| **Breakpoint** | **Largura**    | **Layout**                                      |
-| Desktop        | \> 1024px      | Sidebar fixa + conteúdo lado a lado             |
-| Tablet         | 768px – 1024px | Sidebar colapsável (hamburger) + conteúdo full  |
-| Mobile         | \< 768px       | Sem sidebar (menu hamburger) + cards empilhados |
+|                |                |                                                                  |
+|----------------|----------------|------------------------------------------------------------------|
+| **Breakpoint** | **Largura**    | **Layout**                                                       |
+| Desktop        | > 768px        | Sidebar fixa (240px) + conteúdo lado a lado                      |
+| Mobile         | ≤ 768px        | Sidebar overlay (hamburger abre/fecha) + conteúdo full width     |
 
-**Regras:**
+**Regras implementadas:**
 
-- Tabelas em mobile: usar cards em vez de colunas
+- **Tabelas em mobile:** scroll horizontal (`overflow-x: auto` + `min-width` na `table`) — **não usar cards**
+- **Formulários modais:** `.two-cols` e `.three-cols` colapsam para 1 coluna em ≤ 600px; `dialog.open()` sempre com `maxWidth: '95vw'`
+- **Filtros de listagem:** em mobile (≤ 768px), usam `.filtros-container` que muda para `flex-direction: column` + campos `width: 100%`
+- **Sidebar mobile:** `BreakpointObserver('(max-width: 768px)')` troca `mode` de `side` para `over`; fecha automaticamente ao selecionar um link
+- **Viewport mobile:** `height: 100dvh` no layout para evitar corte de barra de endereço
+- **Login mobile:** card em glassmorphism centralizado com scroll desabilitado (`height: 100dvh; overflow: hidden`)
 
-- Formulários: 2 colunas em desktop, 1 coluna em mobile
+## 10.8 Sistema de Tabelas Global (styles.scss)
 
-- Botões de ação: FAB (floating action button) em mobile
+Todas as telas de listagem usam classes CSS globais definidas em `styles.scss`. Não deve haver estilos de tabela duplicados em SCSSs de componentes.
 
-## 10.8 Tipografia
+| **Classe global**      | **Uso**                                                    |
+|------------------------|------------------------------------------------------------|
+| `.page-container`      | Wrapper flex coluna da página                              |
+| `.page-header`         | Cabeçalho com título e botão de ação                       |
+| `.page-title`          | Título da página (`h1`)                                    |
+| `.page-subtitle`       | Subtítulo descritivo                                       |
+| `.filtros-container`   | Container flex de filtros (colapsa para coluna no mobile)  |
+| `.filtro-field`        | Campo de filtro select (200px desktop / 100% mobile)       |
+| `.busca-field`         | Campo de busca textual (300px desktop / 100% mobile)       |
+| `.table-container`     | Wrapper da tabela (borda, shadow, scroll horizontal)       |
+| `.loading-overlay`     | Spinner sobreposto à tabela durante carregamento           |
+| `.empty-state`         | Estado vazio com ícone + mensagem                          |
+| `.entity-nome-cell`    | Célula de nome com ícone à esquerda                        |
+| `.entity-icon-wrap`    | Container do ícone (variantes: `.blue`, `.green`, `.purple`, `.orange`) |
+| `.entity-nome`         | Nome principal em negrito                                  |
+| `.entity-sub`          | Subtítulo abaixo do nome                                   |
+| `.muted-cell`          | Célula com texto secundário (cinza, 13px)                  |
+| `.valor-chip`          | Chip verde para valores monetários                         |
+| `.action-btn`          | Botão de ação inline (variantes: `.edit`, `.delete`, `.view`, `.manut`, `.toggle`, `.close`) |
+| `.toggle-btn`          | Botão toggle ativo/inativo (`.toggle-on` verde / `.toggle-off` cinza) |
+| `.acoes-cell`          | Container flex centralizado de botões de ação              |
+
+**Regra:** todo `matTooltip` é **obrigatório** em botões de ação — o usuário deve saber o que cada ícone faz.
+
+## 10.9 Tipografia
 
 |                       |          |             |               |
 |-----------------------|----------|-------------|---------------|
@@ -729,18 +740,21 @@ Antes de abrir um PR, verifique todos os itens aplicáveis:
 
 ## 11.2 Checklist do Welton (Front-End)
 
-|        |                                                      |         |
-|--------|------------------------------------------------------|---------|
-| **\#** | **Item**                                             | **OK?** |
-| 1      | Consome API conforme Contrato (URL, DTO)             | ⬜      |
-| 2      | Loading state enquanto carrega dados                 | ⬜      |
-| 3      | Empty state quando lista vazia                       | ⬜      |
-| 4      | Erros tratados (401→login, 400→campos, 500→mensagem) | ⬜      |
-| 5      | Formulário valida antes de submeter                  | ⬜      |
-| 6      | Máscaras aplicadas (CPF, telefone, CEP, moeda)       | ⬜      |
-| 7      | Responsivo (testado em mobile e tablet)              | ⬜      |
-| 8      | Sem 'any' no TypeScript                              | ⬜      |
-| 9      | Sem console.log no código final                      | ⬜      |
-| 10     | Conventional Commit na mensagem                      | ⬜      |
+|        |                                                                              |         |
+|--------|------------------------------------------------------------------------------|---------|
+| **\#** | **Item**                                                                     | **OK?** |
+| 1      | Consome API conforme Contrato (URL, DTO)                                     | ⬜      |
+| 2      | Loading state enquanto carrega dados (`.loading-overlay`)                    | ⬜      |
+| 3      | Empty state quando lista vazia (`.empty-state`)                              | ⬜      |
+| 4      | Erros tratados (401→login, 400→campos, 500→mensagem)                         | ⬜      |
+| 5      | Formulário valida antes de submeter                                          | ⬜      |
+| 6      | Máscaras aplicadas (CPF, telefone, CEP, moeda)                               | ⬜      |
+| 7      | Responsivo em mobile (≤ 768px): tabela scroll horizontal, filtros empilhados | ⬜      |
+| 8      | Modais com `maxWidth: '95vw'` para funcionar em mobile                       | ⬜      |
+| 9      | Todos botões de ação possuem `matTooltip`                                    | ⬜      |
+| 10     | Cores e estilos usando tokens CSS (`var(--primary)`, etc.) — sem hardcode    | ⬜      |
+| 11     | Sem 'any' no TypeScript                                                      | ⬜      |
+| 12     | Sem console.log no código final                                              | ⬜      |
+| 13     | Conventional Commit na mensagem                                              | ⬜      |
 
 *Fim do Guia — Código bom = padrão seguido! 🚀*
