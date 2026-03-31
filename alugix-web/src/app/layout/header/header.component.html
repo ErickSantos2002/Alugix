@@ -7,26 +7,13 @@
 
   <span class="spacer"></span>
 
-  <!-- Toggle dark/light mode -->
-  <button mat-icon-button
-          [matTooltip]="themeService.isDark() ? 'Modo claro' : 'Modo escuro'"
-          (click)="themeService.toggle()"
-          class="theme-btn">
-    <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
-  </button>
-
-  <!-- Menu do usuário -->
-  <button mat-button [matMenuTriggerFor]="userMenu" class="user-btn">
-    <mat-icon>account_circle</mat-icon>
+  <!-- Usuário + logout -->
+  <div class="user-area">
+    <div class="user-avatar">{{ getUserInitials() }}</div>
     <span class="user-name">{{ getUserName() }}</span>
-    <mat-icon class="arrow-icon">arrow_drop_down</mat-icon>
-  </button>
-
-  <mat-menu #userMenu="matMenu">
-    <button mat-menu-item (click)="logout()">
+    <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Sair">
       <mat-icon>logout</mat-icon>
-      <span>Sair</span>
     </button>
-  </mat-menu>
+  </div>
 
 </mat-toolbar>

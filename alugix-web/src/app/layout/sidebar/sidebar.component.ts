@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../core/services/auth.service';
@@ -16,6 +16,7 @@ interface NavItem {
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  @Output() linkClicked = new EventEmitter<void>();
   private readonly authService = inject(AuthService);
 
   readonly navItems: NavItem[] = [

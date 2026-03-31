@@ -15,7 +15,6 @@
   position: relative;
   overflow: hidden;
 
-  // Círculo decorativo de fundo
   &::before {
     content: '';
     position: absolute;
@@ -62,39 +61,72 @@
   color: #fff;
 }
 
-.brand-slogan {
-  font-size: 1.05rem;
-  color: rgba(255, 255, 255, 0.75);
+.hero-slogan {
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.slogan-line1 {
+  font-size: 2rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.slogan-line2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 20px rgba(56, 189, 248, 0.4);
+}
+
+.brand-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
   line-height: 1.6;
   margin-bottom: 48px;
 }
 
-.features-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  text-align: left;
-}
-
-.feature-item {
+.hero-stats {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: center;
+  gap: 24px;
   background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 14px 18px;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 20px 32px;
+  backdrop-filter: blur(8px);
 }
 
-.feature-icon {
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
-  color: rgba(255, 255, 255, 0.9);
-  flex-shrink: 0;
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-num {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #38BDF8;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 // ── Lado Direito ───────────────────────────────────────────────────────────
@@ -139,14 +171,17 @@
   margin-top: 12px;
   height: 50px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700 !important;
   letter-spacing: 0.5px;
   background-color: #1B4F72 !important;
-  border-radius: 8px;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+
+  --mdc-filled-button-label-text-color: #ffffff;
+  --mdc-protected-button-label-text-color: #ffffff;
 
   &:not([disabled]):hover {
-    background-color: #2E86C1 !important;
-    transition: background-color 0.2s;
+    background-color: #2471A3 !important;
   }
 }
 
@@ -169,28 +204,143 @@
   }
 }
 
-// ── Responsivo ─────────────────────────────────────────────────────────────
+// ── Responsivo Mobile ───────────────────────────────────────────────────────
 @media (max-width: 768px) {
+
   .login-wrapper {
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    min-height: unset;
+    background: linear-gradient(160deg, #0d1f35 0%, #1B4F72 50%, #1a6fa8 100%);
+    padding: 24px 20px;
+    gap: 28px;
   }
 
   .login-left {
-    padding: 32px 24px;
-    min-height: 220px;
+    flex: 0 0 auto;
+    background: transparent;
+    padding: 0;
+    overflow: visible;
+    width: 100%;
 
-    .features-list {
-      display: none; // esconde em mobile para não poluir
+    &::before, &::after { display: none; }
+
+    .hero-stats,
+    .brand-desc { display: none; }
+  }
+
+  .login-left-content {
+    max-width: 100%;
+  }
+
+  .logo {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 10px;
+  }
+
+  .brand-name {
+    font-size: 2rem;
+    margin-bottom: 4px;
+  }
+
+  .hero-slogan { margin-bottom: 0; }
+  .slogan-line1 { font-size: 1.15rem; }
+  .slogan-line2 { font-size: 1.45rem; }
+
+  .login-right {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: unset;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 28px 24px;
+  }
+
+  .login-form-container {
+    max-width: 100%;
+  }
+
+  .form-header {
+    margin-bottom: 20px;
+    text-align: center;
+
+    h2 {
+      font-size: 1.3rem;
+      color: #ffffff;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.65);
     }
   }
 
-  .brand-slogan {
-    margin-bottom: 0;
+  ::ng-deep .login-right {
+    .mdc-floating-label,
+    .mdc-floating-label--float-above {
+      color: rgba(255, 255, 255, 0.75) !important;
+    }
+
+    .mdc-text-field__input {
+      color: #ffffff !important;
+      caret-color: #38BDF8 !important;
+
+      &::placeholder { color: rgba(255, 255, 255, 0.4) !important; }
+    }
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.25) !important;
+    }
+
+    .mdc-text-field:hover .mdc-notched-outline__leading,
+    .mdc-text-field:hover .mdc-notched-outline__notch,
+    .mdc-text-field:hover .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.55) !important;
+    }
+
+    .mdc-text-field--focused .mdc-notched-outline__leading,
+    .mdc-text-field--focused .mdc-notched-outline__notch,
+    .mdc-text-field--focused .mdc-notched-outline__trailing {
+      border-color: #38BDF8 !important;
+    }
+
+    .mdc-text-field--focused .mdc-floating-label {
+      color: #38BDF8 !important;
+    }
+
+    .mat-mdc-form-field-icon-suffix mat-icon,
+    .mat-mdc-form-field-icon-suffix button mat-icon {
+      color: rgba(255, 255, 255, 0.55) !important;
+    }
+
+    .mat-mdc-form-field-error {
+      color: #FCA5A5 !important;
+    }
   }
 
-  .login-right {
-    width: 100%;
-    min-width: unset;
-    padding: 32px 24px;
+  .login-btn {
+    background-color: #38BDF8 !important;
+    color: #0d1f35 !important;
+    --mdc-filled-button-label-text-color: #0d1f35;
+    font-weight: 800 !important;
+
+    &:not([disabled]):hover {
+      background-color: #7DD3FC !important;
+    }
+  }
+
+  .error-banner {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #FCA5A5;
   }
 }

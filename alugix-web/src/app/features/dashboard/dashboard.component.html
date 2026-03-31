@@ -23,7 +23,7 @@
               <mat-icon>home</mat-icon>
             </div>
             <div class="card-info">
-              <span class="card-value">{{ r.totalImoveis }}</span>
+              <span class="card-value">{{ animTotalImoveis() }}</span>
               <span class="card-label">Total de Imóveis</span>
             </div>
           </mat-card-content>
@@ -40,7 +40,7 @@
               <mat-icon>people</mat-icon>
             </div>
             <div class="card-info">
-              <span class="card-value">{{ r.totalInquilinos }}</span>
+              <span class="card-value">{{ animTotalInquilinos() }}</span>
               <span class="card-label">Inquilinos Ativos</span>
             </div>
           </mat-card-content>
@@ -52,7 +52,7 @@
               <mat-icon>description</mat-icon>
             </div>
             <div class="card-info">
-              <span class="card-value">{{ r.totalContratosAtivos }}</span>
+              <span class="card-value">{{ animTotalContratos() }}</span>
               <span class="card-label">Contratos Ativos</span>
             </div>
           </mat-card-content>
@@ -64,7 +64,7 @@
               <mat-icon>warning</mat-icon>
             </div>
             <div class="card-info">
-              <span class="card-value">{{ r.totalPagamentosAtrasados }}</span>
+              <span class="card-value">{{ animTotalAtrasados() }}</span>
               <span class="card-label">Pagamentos Atrasados</span>
             </div>
           </mat-card-content>

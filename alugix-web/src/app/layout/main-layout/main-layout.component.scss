@@ -5,7 +5,7 @@
 
 .sidenav {
   width: 240px;
-  background-color: #1B4F72;
+  background: linear-gradient(180deg, #0d1f35 0%, #1B4F72 100%);
   border-right: none;
   box-shadow: 2px 0 8px rgba(0,0,0,0.15);
 }
@@ -18,14 +18,15 @@
   overflow: hidden;
 }
 
-:host-context(.dark-theme) {
-  .sidenav-content { background-color: #121212; }
-  .main-content { background-color: #121212; }
-}
-
 .main-content {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
   height: calc(100% - 64px);
+}
+
+@media (max-width: 768px) {
+  .sidenav {
+    box-shadow: 4px 0 24px rgba(0,0,0,0.35);
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, NgZone, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -37,9 +37,16 @@ import {
 export class DashboardComponent implements OnInit {
   private readonly dashboardService = inject(DashboardService);
   private readonly router = inject(Router);
+  private readonly zone = inject(NgZone);
 
   readonly loading = signal(true);
   readonly resumo = signal<DashboardResumo | null>(null);
+
+  readonly animTotalImoveis = signal(0);
+  readonly animTotalInquilinos = signal(0);
+  readonly animTotalContratos = signal(0);
+  readonly animTotalAtrasados = signal(0);
+
   readonly receita = signal<DashboardReceita | null>(null);
   readonly inadimplencia = signal<DashboardInadimplencia | null>(null);
   readonly contratosVencer = signal<DashboardContratosVencer | null>(null);
@@ -60,15 +67,40 @@ export class DashboardComponent implements OnInit {
     this.carregarDados();
   }
 
+  private countUp(target: number, setter: (v: number) => void, duration = 1200): void {
+    if (target === 0) { setter(0); return; }
+    const start = performance.now();
+    this.zone.runOutsideAngular(() => {
+      const step = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        this.zone.run(() => setter(Math.round(target * eased)));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+
   private carregarDados(): void {
     this.loading.set(true);
     let count = 0;
     const done = () => { if (++count === 4) this.loading.set(false); };
 
-    this.dashboardService.resumo().subscribe({ next: (d) => { this.resumo.set(d); done(); }, error: done });
-    this.dashboardService.receita().subscribe({ next: (d) => { this.receita.set(d); done(); }, error: done });
-    this.dashboardService.inadimplencia().subscribe({ next: (d) => { this.inadimplencia.set(d); done(); }, error: done });
-    this.dashboardService.contratosVencer().subscribe({ next: (d) => { this.contratosVencer.set(d); done(); }, error: done });
+    this.dashboardService.resumo().subscribe({
+      next: (d) => {
+        this.resumo.set(d);
+        this.countUp(d.totalImoveis, v => this.animTotalImoveis.set(v));
+        this.countUp(d.totalInquilinos, v => this.animTotalInquilinos.set(v));
+        this.countUp(d.totalContratosAtivos, v => this.animTotalContratos.set(v));
+        this.countUp(d.totalPagamentosAtrasados, v => this.animTotalAtrasados.set(v));
+        done();
+      },
+      error: done
+    });
+    this.dashboardService.receita().subscribe({ next: d => { this.receita.set(d); done(); }, error: done });
+    this.dashboardService.inadimplencia().subscribe({ next: d => { this.inadimplencia.set(d); done(); }, error: done });
+    this.dashboardService.contratosVencer().subscribe({ next: d => { this.contratosVencer.set(d); done(); }, error: done });
   }
 
   irParaContrato(id: number): void {

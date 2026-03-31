@@ -2,6 +2,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(180deg, #0d1f35 0%, #1B4F72 100%);
 }
 
 .sidebar-logo {
@@ -10,7 +11,7 @@
   gap: 10px;
   padding: 0 16px;
   height: 64px;
-  border-bottom: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
   flex-shrink: 0;
 
   .logo-img {
@@ -29,7 +30,7 @@
 .nav-list {
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 12px 8px;
   gap: 2px;
   flex: 1;
 }
@@ -40,15 +41,16 @@
   gap: 12px;
   padding: 10px 14px;
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.72);
   text-decoration: none;
   font-size: 14px;
   font-weight: 400;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
   cursor: pointer;
+  border-left: 3px solid transparent;
 
   mat-icon {
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.72);
     font-size: 20px;
     width: 20px;
     height: 20px;
@@ -56,17 +58,19 @@
   }
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.09);
     color: white;
+    transform: translateX(2px);
 
     mat-icon { color: white; }
   }
 
   &.active-link {
-    background-color: rgba(255, 255, 255, 0.18);
+    background-color: rgba(255, 255, 255, 0.12);
     color: white;
-    font-weight: 500;
+    font-weight: 600;
+    border-left: 3px solid #38BDF8;
 
-    mat-icon { color: white; }
+    mat-icon { color: #38BDF8; }
   }
 }

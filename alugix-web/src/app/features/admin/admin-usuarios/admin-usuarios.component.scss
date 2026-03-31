@@ -113,19 +113,3 @@ td.mat-cell { padding: 12px 16px; }
   mat-icon { font-size: 48px; width: 48px; height: 48px; }
   p { margin: 0; font-size: 0.95rem; }
 }
-
-/* Dark mode */
-:host-context(.dark-theme) {
-  .page-header .page-title { color: #90caf9; }
-  .page-header .page-subtitle { color: #aaa; }
-
-  .table-card { background: #1e1e1e; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-
-  th.mat-header-cell { color: #ccc; }
-
-  .badge-perfil        { background: #1a3a5c; color: #90caf9; }
-  .badge-perfil.admin  { background: #3a1a5c; color: #ce93d8; }
-
-  .badge-situacao.ativo   { background: #1e4d2b; color: #80cbc4; }
-  .badge-situacao.inativo { background: #4a1010; color: #ef9a9a; }
-}

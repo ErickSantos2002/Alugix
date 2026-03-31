@@ -9,7 +9,8 @@
     @for (item of navItems; track item.route) {
       <a class="nav-item"
          [routerLink]="item.route"
-         routerLinkActive="active-link">
+         routerLinkActive="active-link"
+         (click)="linkClicked.emit()">
         <mat-icon>{{ item.icon }}</mat-icon>
         <span>{{ item.label }}</span>
       </a>
@@ -18,7 +19,8 @@
     @if (isAdmin()) {
       <a class="nav-item"
          routerLink="/admin"
-         routerLinkActive="active-link">
+         routerLinkActive="active-link"
+         (click)="linkClicked.emit()">
         <mat-icon>admin_panel_settings</mat-icon>
         <span>Administração</span>
       </a>
