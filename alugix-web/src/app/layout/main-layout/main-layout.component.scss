@@ -22,7 +22,15 @@
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+  overflow-x: auto;
   height: calc(100% - 64px);
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px 12px;
+  }
 }
 
 @media (max-width: 768px) {

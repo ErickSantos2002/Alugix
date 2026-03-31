@@ -144,6 +144,12 @@ body {
   border-radius: 6px !important;
 }
 
+// ─── Sidenav content scroll fix ─────────────────────────────────────────────
+.mat-drawer-content {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 // ─── Scrollbar ───────────────────────────────────────────────────────────────
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -191,6 +197,15 @@ body {
 
   .filtro-field  { width: 200px; }
   .busca-field   { width: 300px; }
+
+  @media (max-width: 768px) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+
+    .filtro-field, .busca-field { min-width: 180px; flex-shrink: 0; }
+  }
 }
 
 // Table container
@@ -198,12 +213,14 @@ body {
 .table-card {
   position: relative;
   border-radius: 12px;
-  overflow: hidden;
   background: white;
   border: 1px solid #E2E8F0;
   box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  overflow-x: auto;   // scroll horizontal no mobile
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 
-  table { width: 100%; }
+  table { width: 100%; min-width: 600px; }
 }
 
 .loading-overlay,
