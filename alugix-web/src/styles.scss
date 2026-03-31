@@ -199,12 +199,13 @@ body {
   .busca-field   { width: 300px; }
 
   @media (max-width: 768px) {
+    flex-direction: column;
     flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
+    overflow-x: unset;
+    padding-bottom: 0;
+    gap: 2px;
 
-    .filtro-field, .busca-field { min-width: 180px; flex-shrink: 0; }
+    .filtro-field, .busca-field { width: 100% !important; min-width: unset; flex-shrink: 1; }
   }
 }
 
