@@ -104,12 +104,12 @@
 
       </table>
 
-      <mat-paginator
-        [length]="totalElementos()"
+      <app-pagination
+        [totalElements]="totalElementos()"
         [pageSize]="size"
-        [pageSizeOptions]="[5, 10, 20]"
-        (page)="paginar($event)"
-        showFirstLastButtons />
+        [pageIndex]="page"
+        itemLabel="usuários"
+        (pageChange)="paginar($event)" />
     }
   </div>
 

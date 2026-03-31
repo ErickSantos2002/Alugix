@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PaginationComponent, PaginationEvent } from '../../../shared/components/pagination/pagination.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +22,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatTableModule, MatPaginatorModule,
+    MatTableModule, PaginationComponent,
     MatInputModule, MatSelectModule, MatButtonModule, MatIconModule,
     MatTooltipModule, MatProgressSpinnerModule,
     MatSnackBarModule, MatDialogModule,
@@ -76,7 +76,7 @@ export class InquilinosListComponent implements OnInit {
       });
   }
 
-  onPageChange(event: PageEvent): void {
+  onPageChange(event: PaginationEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.carregar();

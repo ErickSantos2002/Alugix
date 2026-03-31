@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PaginationComponent, PaginationEvent } from '../../../shared/components/pagination/pagination.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,7 +29,7 @@ const STATUS_LABEL: Record<StatusContrato, string> = {
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatTableModule, MatPaginatorModule,
+    MatTableModule, PaginationComponent,
     MatInputModule, MatSelectModule,
     MatButtonModule, MatIconModule,
     MatTooltipModule, MatProgressSpinnerModule,
@@ -84,7 +84,7 @@ export class ContratosListComponent implements OnInit {
     });
   }
 
-  onPageChange(event: PageEvent): void {
+  onPageChange(event: PaginationEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.carregar();

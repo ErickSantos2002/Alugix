@@ -116,12 +116,12 @@
 
     </table>
 
-    <mat-paginator
-      [length]="totalElements()"
+    <app-pagination
+      [totalElements]="totalElements()"
       [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 25]"
-      (page)="onPageChange($event)"
-      showFirstLastButtons />
+      [pageIndex]="pageIndex"
+      itemLabel="inquilinos"
+      (pageChange)="onPageChange($event)" />
 
   </div>
 </div>

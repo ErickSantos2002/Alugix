@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { PaginationComponent, PaginationEvent } from '../../../shared/components/pagination/pagination.component';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,7 +36,7 @@ const TIPO_LABEL: Record<TipoImovel, string> = {
   selector: 'app-imoveis-list',
   imports: [
     ReactiveFormsModule,
-    MatTableModule, MatPaginatorModule, MatSortModule,
+    MatTableModule, MatSortModule, PaginationComponent,
     MatInputModule, MatSelectModule,
     MatButtonModule, MatIconModule, MatChipsModule,
     MatTooltipModule, MatProgressSpinnerModule,
@@ -116,7 +116,7 @@ export class ImoveisListComponent implements OnInit {
     });
   }
 
-  onPageChange(event: PageEvent): void {
+  onPageChange(event: PaginationEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.carregar();

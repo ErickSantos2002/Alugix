@@ -1,0 +1,42 @@
+@if (totalElements > 0) {
+  <div class="pagination-wrapper">
+
+    <!-- Desktop -->
+    <div class="pagination-desktop">
+      <span class="info-text">
+        Mostrando {{ startItem }} a {{ endItem }} de {{ totalElements }} {{ itemLabel }}
+      </span>
+
+      <div class="controls">
+        <button class="btn-nav" [disabled]="!hasPrev" (click)="prev()">Anterior</button>
+
+        <div class="page-numbers">
+          @for (page of visiblePages; track page) {
+            <button
+              class="btn-page"
+              [class.active]="page === currentPage"
+              (click)="goTo(page)">
+              {{ page }}
+            </button>
+          }
+        </div>
+
+        <button class="btn-nav" [disabled]="!hasNext" (click)="next()">Próxima</button>
+      </div>
+    </div>
+
+    <!-- Mobile -->
+    <div class="pagination-mobile">
+      <span class="info-text">
+        Mostrando {{ startItem }} a {{ endItem }} de {{ totalElements }} {{ itemLabel }}
+      </span>
+
+      <div class="controls-mobile">
+        <button class="btn-icon" [disabled]="!hasPrev" (click)="prev()">&lt;</button>
+        <span class="current-badge">{{ currentPage }}</span>
+        <button class="btn-icon" [disabled]="!hasNext" (click)="next()">&gt;</button>
+      </div>
+    </div>
+
+  </div>
+}
