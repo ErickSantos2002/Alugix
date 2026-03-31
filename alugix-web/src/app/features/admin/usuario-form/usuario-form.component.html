@@ -29,7 +29,8 @@
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>{{ isEdicao ? 'Nova Senha (deixe em branco para manter)' : 'Senha*' }}</mat-label>
     <input matInput formControlName="senha" [type]="mostrarSenha ? 'text' : 'password'" maxlength="100" />
-    <button mat-icon-button matSuffix type="button" (click)="mostrarSenha = !mostrarSenha">
+    <button mat-icon-button matSuffix type="button" (click)="mostrarSenha = !mostrarSenha"
+            [matTooltip]="mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'">
       <mat-icon>{{ mostrarSenha ? 'visibility_off' : 'visibility' }}</mat-icon>
     </button>
     @if (form.get('senha')?.hasError('required') && form.get('senha')?.touched) {

@@ -41,7 +41,7 @@ export class AdminUsuariosComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
-  readonly colunas = ['nome', 'email', 'perfil', 'ativo', 'createdAt', 'acoes'];
+  readonly colunas = ['nome', 'perfil', 'ativo', 'createdAt', 'acoes'];
   readonly usuarios = signal<UsuarioResponse[]>([]);
   readonly totalElementos = signal(0);
   readonly loading = signal(true);

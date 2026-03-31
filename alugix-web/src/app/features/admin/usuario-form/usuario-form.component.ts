@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UsuarioService } from '../../../core/services/usuario.service';
 import { UsuarioResponse } from '../../../core/models/usuario.model';
@@ -25,6 +26,7 @@ export interface UsuarioFormData {
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     MatProgressSpinnerModule,
   ],
   templateUrl: './usuario-form.component.html',
