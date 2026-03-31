@@ -138,6 +138,7 @@ export class ImoveisListComponent implements OnInit {
     const ref = this.dialog.open(ImovelFormComponent, {
       data: null,
       width: '600px',
+      maxWidth: '95vw',
       disableClose: true,
     });
 
@@ -153,6 +154,7 @@ export class ImoveisListComponent implements OnInit {
     const ref = this.dialog.open(ImovelFormComponent, {
       data: imovel,
       width: '600px',
+      maxWidth: '95vw',
       disableClose: true,
     });
 

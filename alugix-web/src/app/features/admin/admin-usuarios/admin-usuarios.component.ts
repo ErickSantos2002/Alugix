@@ -75,12 +75,12 @@ export class AdminUsuariosComponent implements OnInit {
   }
 
   novoUsuario(): void {
-    this.dialog.open(UsuarioFormComponent, { width: '480px', data: {} })
+    this.dialog.open(UsuarioFormComponent, { width: '480px', maxWidth: '95vw', data: {} })
       .afterClosed().subscribe(u => { if (u) { this.snackBar.open('Usuário criado!', '', { duration: 3000 }); this.carregar(); } });
   }
 
   editarUsuario(usuario: UsuarioResponse): void {
-    this.dialog.open(UsuarioFormComponent, { width: '480px', data: { usuario } })
+    this.dialog.open(UsuarioFormComponent, { width: '480px', maxWidth: '95vw', data: { usuario } })
       .afterClosed().subscribe(u => { if (u) { this.snackBar.open('Usuário atualizado!', '', { duration: 3000 }); this.carregar(); } });
   }
 

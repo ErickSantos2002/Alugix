@@ -15,8 +15,6 @@ h2[mat-dialog-title] {
 
 mat-dialog-content {
   padding: 16px 24px !important;
-  min-width: 480px;
-  max-width: 560px;
 }
 
 .form-grid {
@@ -34,12 +32,22 @@ mat-dialog-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 .three-cols {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 16px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 .erro-banner {

@@ -105,6 +105,7 @@ export class ContratosListComponent implements OnInit {
   novoContrato(): void {
     const ref = this.dialog.open(ContratoFormComponent, {
       width: '620px',
+      maxWidth: '95vw',
       disableClose: true,
     });
     ref.afterClosed().subscribe((res) => {

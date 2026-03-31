@@ -89,6 +89,7 @@ export class ContratoDetalheComponent implements OnInit {
     const ref = this.dialog.open(PagarDialogComponent, {
       data: { pagamento, valorAluguel: c.valorAluguel },
       width: '500px',
+      maxWidth: '95vw',
       disableClose: true,
     });
 

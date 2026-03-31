@@ -116,6 +116,7 @@ export class InquilinosListComponent implements OnInit {
     const ref = this.dialog.open(InquilinoFormComponent, {
       data: null,
       width: '560px',
+      maxWidth: '95vw',
       disableClose: true,
     });
     ref.afterClosed().subscribe((res) => {
@@ -130,6 +131,7 @@ export class InquilinosListComponent implements OnInit {
     const ref = this.dialog.open(InquilinoFormComponent, {
       data: inquilino,
       width: '560px',
+      maxWidth: '95vw',
       disableClose: true,
     });
     ref.afterClosed().subscribe((res) => {
